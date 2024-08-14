@@ -1,24 +1,33 @@
-package vn.hoidanit.laptopshop.controller;
+package vn.hoidanit.laptopshop.controller.admin;
 
 import java.util.List;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+
 import vn.hoidanit.laptopshop.domain.User;
 import vn.hoidanit.laptopshop.service.UserService;
+import vn.hoidanit.laptopshop.service.UploadService;
 
 @Controller
 public class UserController {
 
     private final UserService userService;
+    private final UploadService uploadService;
+    private final PasswordEncoder passwordEncoder;
 
     // DI: Dependency Injection
-    public UserController(UserService userService) {
+    public UserController(UserService userService, UploadService uploadService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
+        this.uploadService = uploadService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping("/")
@@ -35,7 +44,7 @@ public class UserController {
     public String getUserPage(Model model) {
         List<User> users = userService.getAllUsers();
         model.addAttribute("users", users);
-        return "admin/user/table_user";
+        return "admin/user/show";
     }
 
     // Rendering Create User Page
@@ -47,8 +56,17 @@ public class UserController {
 
     // Handling Create User
     @PostMapping("/admin/user/create")
-    public String createUserPage(Model model, @ModelAttribute("newUser") User hkhang) {
+    public String createUserPage(Model model, @ModelAttribute("newUser") User hkhang,
+            @RequestParam("khangFile") MultipartFile file) {
         // System.out.println("User created with: " + hkhang);
+        String avatar = uploadService.handleUploadFile(file, "avatar");
+        String hashPassword = passwordEncoder.encode(hkhang.getPassword());
+
+        hkhang.setAvatar(avatar);
+        hkhang.setPassword(hashPassword);
+        hkhang.setRole(userService.getRoleByName(hkhang.getRole().getName()));
+
+        // save to db
         userService.handleSaveUser(hkhang);
         return "redirect:/admin/user";
     }

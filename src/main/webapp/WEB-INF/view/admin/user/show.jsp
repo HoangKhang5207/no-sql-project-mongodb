@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="Hỏi Dân IT - Dự án laptopshop" />
     <meta name="author" content="Hỏi Dân IT" />
-    <title>Dashboard - User Detail</title>
+    <title>Dashboard - Users</title>
     <link href="/css/styles.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 </head>
@@ -35,21 +35,32 @@
                     <div class="row mt-5">
                         <div class="col-12 mx-auto">
                             <div class="d-flex justify-content-between">
-                                <h3>User Details with id = ${userId}</h3>
+                                <h3>Table Users</h3>
+                                <a href="/admin/user/create" class="btn btn-primary">Create a user</a>
                             </div>
                             <hr>
-                            <div class="card" style="width: 60%;">
-                                <div class="card-header">
-                                    User information
-                                </div>
-                                <ul class="list-group list-group-flush">
-                                    <li class="list-group-item">Email: ${user.email}</li>
-                                    <li class="list-group-item">Full Name: ${user.fullName}</li>
-                                    <li class="list-group-item">Address: ${user.address}</li>
-                                    <li class="list-group-item">Phone: ${user.phone}</li>
-                                </ul>
-                            </div>
-                            <a href="/admin/user" class="btn btn-success mt-2">Back</a>
+                            <table class="table table-bordered table-hover">
+                                <thead>
+                                    <th>ID</th>
+                                    <th>Email</th>
+                                    <th>Full Name</th>
+                                    <th>Action</th>
+                                </thead>
+                                <tbody>
+                                    <c:forEach var="user" items="${users}">
+                                        <tr>
+                                            <td>${user.id}</td>
+                                            <td>${user.email}</td>
+                                            <td>${user.fullName}</td>
+                                            <td>
+                                                <a href="/admin/user/${user.id}" class="btn btn-success">View</a>
+                                                <a href="/admin/user/update/${user.id}" class="btn btn-warning">Update</a>
+                                                <a href="/admin/user/delete/${user.id}" class="btn btn-danger">Delete</a>
+                                            </td>
+                                        </tr>
+                                    </c:forEach>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

@@ -5,15 +5,19 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import vn.hoidanit.laptopshop.domain.User;
+import vn.hoidanit.laptopshop.domain.Role;
 import vn.hoidanit.laptopshop.repository.UserRepository;
+import vn.hoidanit.laptopshop.repository.RoleRepository;
 
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository) {
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
     }
 
     public String handleHello() {
@@ -57,5 +61,10 @@ public class UserService {
     // Delete User By Id
     public void handleDeleteUser(Long userId) {
         userRepository.deleteById(userId);
+    }
+
+    // Get Role by Name
+    public Role getRoleByName(String roleName) {
+        return roleRepository.findByName(roleName);
     }
 }
