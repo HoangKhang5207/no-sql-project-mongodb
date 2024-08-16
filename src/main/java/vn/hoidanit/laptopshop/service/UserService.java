@@ -20,10 +20,6 @@ public class UserService {
         this.roleRepository = roleRepository;
     }
 
-    public String handleHello() {
-        return "Hello from Service";
-    }
-
     // Get All Users
     public List<User> getAllUsers() {
         return userRepository.findAll();
@@ -48,11 +44,12 @@ public class UserService {
 
     // Update User
     public User handleUpdateUser(User updateUser) {
-        User user = userRepository.findById(updateUser.getId()).orElse(null);
+        User user = getUserById(updateUser.getId());
         if (user != null) {
             user.setFullName(updateUser.getFullName());
             user.setAddress(updateUser.getAddress());
             user.setPhone(updateUser.getPhone());
+            user.setAvatar(updateUser.getAvatar());
             return userRepository.save(user);
         }
         return null;

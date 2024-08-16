@@ -13,6 +13,18 @@
     <meta name="author" content="Hỏi Dân IT" />
     <title>Dashboard - Update User</title>
     <link href="/css/styles.css" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+      $(document).ready(() => {
+        const avatarFile = $("#avatar");
+        avatarFile.change(function (e) {
+          const imgURL = URL.createObjectURL(e.target.files[0]);
+          console.log(imgURL.toString());
+          $("#avatarPreview").attr("src", imgURL);
+          $("#avatarPreview").css({ "display": "block" });
+        });
+      });
+    </script>
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 </head>
 
@@ -36,25 +48,38 @@
                         <div class="col-md-6 col-12 mx-auto">
                             <h3>Update User with Id = ${updateUser.id}</h3>
                             <hr>
-                            <form:form action="/admin/user/update" method="post" modelAttribute="updateUser">
+                            <form:form action="/admin/user/update" method="post" 
+                                    modelAttribute="updateUser"
+                                    enctype="multipart/form-data">
                                 <div class="mb-3">
                                     <form:input path="id" type="hidden" class="form-control" id="userId"/>
                                 </div>
                                 <div class="mb-3">
                                     <label for="email" class="form-label">Email:</label>
-                                    <form:input path="email" type="email" class="form-control" id="email" disabled="true"/>
+                                    <form:input path="email" type="email" disabled="true" class="form-control"/>
                                 </div>
                                 <div class="mb-3">
                                     <label for="phone" class="form-label">Phone number:</label>
-                                    <form:input path="phone" type="text" class="form-control" id="phone"/>
+                                    <form:input path="phone" type="text" class="form-control"/>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="fullname" class="form-label">Full Name:</label>
-                                    <form:input path="fullName" type="text" class="form-control" id="fullname"/>
+                                    <label for="fullName" class="form-label">Full Name:</label>
+                                    <form:input path="fullName" type="text" class="form-control"/>
                                 </div>
                                 <div class="mb-3">
                                     <label for="address" class="form-label">Address:</label>
-                                    <form:input path="address" type="text" class="form-control" id="address"/>
+                                    <form:input path="address" type="text" class="form-control"/>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="avatar" class="form-label">Avatar:</label>
+                                    <form:input id="avatar" name="khangFile" path="" 
+                                                accept=".png, .jpg, .jpeg" type="file" class="form-control"/>
+                                </div>
+                                <div class="mb-3">
+                                    <img alt="Avatar Preview" src="/images/avatar/${updateUser.avatar}" 
+                                        id="avatarPreview" 
+                                        style="max-height: 250px; display: block;" 
+                                        class="mx-auto"/> 
                                 </div>
                                 <button type="submit" class="btn btn-warning">Update</button>
                                 <a href="/admin/user" class="btn btn-secondary">Back</a>
