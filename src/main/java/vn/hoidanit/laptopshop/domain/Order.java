@@ -24,6 +24,11 @@ public class Order {
 
     private Double totalPrice;
 
+    private String receiverName;
+    private String receiverAddress;
+    private String receiverPhone;
+    private String status;
+
     @OneToMany(mappedBy = "order")
     List<OrderDetail> orderDetails;
 
@@ -50,12 +55,44 @@ public class Order {
     public void setTotalPrice(Double totalPrice) {
         this.totalPrice = totalPrice;
     }
-
+    
     public List<OrderDetail> getOrderDetails() {
         return orderDetails;
     }
 
     public void setOrderDetails(List<OrderDetail> orderDetails) {
         this.orderDetails = orderDetails;
+    }
+
+    public String getReceiverName() {
+        return receiverName;
+    }
+
+    public void setReceiverName(String receiverName) {
+        this.receiverName = receiverName;
+    }
+
+    public String getReceiverAddress() {
+        return receiverAddress;
+    }
+
+    public void setReceiverAddress(String receiverAddress) {
+        this.receiverAddress = receiverAddress;
+    }
+
+    public String getReceiverPhone() {
+        return receiverPhone;
+    }
+
+    public void setReceiverPhone(String receiverPhone) {
+        this.receiverPhone = receiverPhone;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
