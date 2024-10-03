@@ -5,15 +5,15 @@ import org.springframework.stereotype.Service;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import vn.hoangkhang.laptopshop.domain.dto.RegisterDTO;
-import vn.hoangkhang.laptopshop.service.UserService;
+import vn.hoangkhang.laptopshop.service.UserMongoService;
 
 @Service
 public class RegisterValidator implements ConstraintValidator<RegisterChecked, RegisterDTO> {
 
-    private final UserService userService;
+    private final UserMongoService userMongoService;
 
-    public RegisterValidator(UserService userService) {
-        this.userService = userService;
+    public RegisterValidator(UserMongoService userMongoService) {
+        this.userMongoService = userMongoService;
     }
 
     @Override
@@ -32,7 +32,7 @@ public class RegisterValidator implements ConstraintValidator<RegisterChecked, R
         // Additional validations can be added here
 
         // Check Email
-        if (userService.checkEmailExists(user.getEmail())) {
+        if (userMongoService.checkEmailExists(user.getEmail())) {
             context.buildConstraintViolationWithTemplate("Email đã tồn tại")
                     .addPropertyNode("email")
                     .addConstraintViolation()

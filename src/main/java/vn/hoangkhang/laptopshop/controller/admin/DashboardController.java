@@ -4,22 +4,22 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import vn.hoangkhang.laptopshop.service.UserService;
+import vn.hoangkhang.laptopshop.service.UserMongoService;
 
 @Controller
 public class DashboardController {
 
-    private final UserService userService;
+    private final UserMongoService userMongoService;
 
-    public DashboardController(UserService userService) {
-        this.userService = userService;
+    public DashboardController(UserMongoService userMongoService) {
+        this.userMongoService = userMongoService;
     }
 
     @GetMapping("/admin")
     public String dashboard(Model model) {
-        model.addAttribute("countUsers", this.userService.countUsers());
-        model.addAttribute("countProducts", this.userService.countProducts());
-        model.addAttribute("countOrders", this.userService.countOrders());
+        model.addAttribute("countUsers", this.userMongoService.countUsers());
+        model.addAttribute("countProducts", this.userMongoService.countProducts());
+        model.addAttribute("countOrders", this.userMongoService.countOrders());
         return "admin/dashboard/show";
     }
 }

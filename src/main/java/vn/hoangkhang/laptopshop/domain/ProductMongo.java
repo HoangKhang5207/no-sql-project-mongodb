@@ -1,22 +1,20 @@
 package vn.hoangkhang.laptopshop.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import java.util.List;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-@Entity
-@Table(name = "products")
-public class Product {
+@Document(collection = "products")
+public class ProductMongo {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     @NotBlank(message = "Tên sản phẩm không được để trống")
     private String name;
@@ -27,24 +25,42 @@ public class Product {
 
     @NotNull
     @NotBlank(message = "detailDesc không được để trống")
-    @Column(columnDefinition = "MEDIUMTEXT")
     private String detailDesc;
 
     @NotBlank(message = "shortDesc không được để trống")
     private String shortDesc;
 
     @Min(value = 1, message = "Số lượng cần lớn hơn hoặc bằng 1")
-    private Long quantity;
-
-    private Long sold;
+    private long quantity;
+    private long sold;
     private String factory;
     private String target;
+    private List<ReviewMongo> reviews;
 
-    public Long getId() {
+    public ProductMongo() {
+
+    }
+
+    public ProductMongo(String id, String name, Double price, String image, String detailDesc, String shortDesc,
+            long quantity, long sold, String factory, String target, List<ReviewMongo> reviews) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.image = image;
+        this.detailDesc = detailDesc;
+        this.shortDesc = shortDesc;
+        this.quantity = quantity;
+        this.sold = sold;
+        this.factory = factory;
+        this.target = target;
+        this.reviews = reviews;
+    }
+
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -92,7 +108,7 @@ public class Product {
         return quantity;
     }
 
-    public void setQuantity(Long quantity) {
+    public void setQuantity(long quantity) {
         this.quantity = quantity;
     }
 
@@ -100,7 +116,7 @@ public class Product {
         return sold;
     }
 
-    public void setSold(Long sold) {
+    public void setSold(long sold) {
         this.sold = sold;
     }
 
@@ -118,5 +134,13 @@ public class Product {
 
     public void setTarget(String target) {
         this.target = target;
+    }
+
+    public List<ReviewMongo> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<ReviewMongo> reviews) {
+        this.reviews = reviews;
     }
 }

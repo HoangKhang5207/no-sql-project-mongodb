@@ -12,16 +12,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final UserService userService;
+    private final UserMongoService userMongoService;
 
-    public CustomUserDetailsService(UserService userService) {
-        this.userService = userService;
+    public CustomUserDetailsService(UserMongoService userMongoService) {
+        this.userMongoService = userMongoService;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         // logic
-        vn.hoangkhang.laptopshop.domain.User user = userService.getUserByEmail(username);
+        vn.hoangkhang.laptopshop.domain.UserMongo user = this.userMongoService.getUserByEmail(username);
         if (user == null) {
             throw new UsernameNotFoundException("User not found with email: " + username);
         }

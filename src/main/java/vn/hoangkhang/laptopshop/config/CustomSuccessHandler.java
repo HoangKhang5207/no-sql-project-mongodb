@@ -17,15 +17,15 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import vn.hoangkhang.laptopshop.domain.User;
-import vn.hoangkhang.laptopshop.service.UserService;
+import vn.hoangkhang.laptopshop.domain.UserMongo;
+import vn.hoangkhang.laptopshop.service.UserMongoService;
 
 public class CustomSuccessHandler implements AuthenticationSuccessHandler {
 
     private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
     @Autowired
-    private UserService userService;
+    private UserMongoService userMongoService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -68,7 +68,7 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
         String email = authentication.getName();
 
         // get user
-        User user = userService.getUserByEmail(email);
+        UserMongo user = this.userMongoService.getUserByEmail(email);
 
         if (user != null) {
             session.setAttribute("fullName", user.getFullName());

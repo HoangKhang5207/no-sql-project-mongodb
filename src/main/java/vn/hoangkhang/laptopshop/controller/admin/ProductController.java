@@ -1,5 +1,6 @@
 package vn.hoangkhang.laptopshop.controller.admin;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,19 +18,22 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.validation.Valid;
-import vn.hoangkhang.laptopshop.domain.Product;
-import vn.hoangkhang.laptopshop.service.ProductService;
+// import vn.hoangkhang.laptopshop.domain.Product;
+import vn.hoangkhang.laptopshop.domain.ProductMongo;
+import vn.hoangkhang.laptopshop.domain.ReviewMongo;
+import vn.hoangkhang.laptopshop.service.ProductMongoService;
 import vn.hoangkhang.laptopshop.service.UploadService;
 
 @Controller
 public class ProductController {
 
-    private final ProductService productService;
     private final UploadService uploadService;
+    private final ProductMongoService productMongoService;
 
-    public ProductController(ProductService productService, UploadService uploadService) {
-        this.productService = productService;
+    public ProductController(UploadService uploadService,
+            ProductMongoService productMongoService) {
         this.uploadService = uploadService;
+        this.productMongoService = productMongoService;
     }
 
     // Get List of Products
@@ -49,12 +53,14 @@ public class ProductController {
 
         // client: page = 1, limit = 10
         // database: offset + limit
-        Pageable pageable = PageRequest.of(page - 1, 4);
-        // pageNumber: số trang từ phía client gửi lên server (nhưng với phía backend bắt đầu từ 0).
+        Pageable pageable = PageRequest.of(page - 1, 5);
+        // pageNumber: số trang từ phía client gửi lên server (nhưng với phía backend
+        // bắt đầu từ 0).
         // pageSize: số lượng phần tử muốn lấy.
 
-        Page<Product> pageProduct = productService.getAllProducts(pageable);
-        List<Product> products = pageProduct.getContent(); // convert Page to List
+        Page<ProductMongo> pageProduct = productMongoService.getAllProducts(pageable);
+        List<ProductMongo> products = pageProduct.getContent(); // convert Page to List
+
         model.addAttribute("products", products);
 
         model.addAttribute("currentPage", page);
@@ -65,14 +71,14 @@ public class ProductController {
     // Rendering Create Product Page
     @GetMapping("/admin/product/create")
     public String getCreateProductPage(Model model) {
-        model.addAttribute("newProduct", new Product());
+        model.addAttribute("newProduct", new ProductMongo());
         return "admin/product/create";
     }
 
     // Handling Create Product
     @PostMapping("/admin/product/create")
     public String createProductPage(Model model,
-            @Valid @ModelAttribute("newProduct") Product product,
+            @Valid @ModelAttribute("newProduct") ProductMongo product,
             BindingResult bindingResult,
             @RequestParam("productFile") MultipartFile file) {
 
@@ -83,30 +89,33 @@ public class ProductController {
         String productImage = uploadService.handleUploadFile(file, "product");
         product.setImage(productImage);
 
+        product.setReviews(new ArrayList<ReviewMongo>());
+
         // save to db
-        productService.handleSaveProduct(product);
+        productMongoService.handleSaveProduct(product);
+
         return "redirect:/admin/product";
     }
 
     // Rendering Product Details by Id
     @GetMapping("/admin/product/{productId}")
-    public String getProductDetailPage(Model model, @PathVariable Long productId) {
-        Product product = productService.getProductById(productId);
+    public String getProductDetailPage(Model model, @PathVariable String productId) {
+        ProductMongo product = productMongoService.getProductById(productId);
         model.addAttribute("product", product);
         return "admin/product/detail";
     }
 
     // Rendering Update Product Page by Id
     @GetMapping("/admin/product/update/{productId}")
-    public String getUpdateProductPage(Model model, @PathVariable Long productId) {
-        Product product = productService.getProductById(productId);
+    public String getUpdateProductPage(Model model, @PathVariable String productId) {
+        ProductMongo product = productMongoService.getProductById(productId);
         model.addAttribute("updateProduct", product);
         return "admin/product/update";
     }
 
     // Handling Update Product
     @PostMapping("/admin/product/update")
-    public String updateProductPage(@Valid @ModelAttribute("updateProduct") Product product,
+    public String updateProductPage(@Valid @ModelAttribute("updateProduct") ProductMongo product,
             BindingResult bindingResult, @RequestParam("productFile") MultipartFile file) {
 
         // validate
@@ -119,23 +128,25 @@ public class ProductController {
             product.setImage(productImage);
         }
 
-        productService.handleUpdateUser(product);
+        product.setReviews(new ArrayList<ReviewMongo>());
+
+        productMongoService.handleUpdateProduct(product);
 
         return "redirect:/admin/product";
     }
 
     // Rendering Delete User Confirmation
     @GetMapping("/admin/product/delete/{productId}")
-    public String getDeleteProductPage(Model model, @PathVariable Long productId) {
+    public String getDeleteProductPage(Model model, @PathVariable String productId) {
         model.addAttribute("productId", productId);
-        model.addAttribute("newProduct", new Product());
+        model.addAttribute("newProduct", new ProductMongo());
         return "admin/product/delete";
     }
 
     // Handling Delete Product
     @PostMapping("/admin/product/delete")
-    public String deleteProductPage(@ModelAttribute("newProduct") Product product) {
-        productService.handleDeleteProduct(product.getId());
+    public String deleteProductPage(@ModelAttribute("newProduct") ProductMongo product) {
+        productMongoService.handleDeleteProduct(product.getId());
         return "redirect:/admin/product";
     }
 }

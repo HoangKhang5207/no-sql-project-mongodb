@@ -72,7 +72,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <c:if test="${ empty orders}">
+                        <c:if test="${ empty orders }">
                             <tr>
                                 <td colspan="6">
                                     Không có đơn hàng nào được tạo
@@ -82,11 +82,11 @@
                         <c:forEach var="order" items="${orders}">
                             <tr>
                                 <td colspan="2">Order Id = ${order.id}</td>
+                                <td colspan="2"></td>
                                 <td colspan="1">
                                     <fmt:formatNumber type="number" value=" ${order.totalPrice}" />
                                     đ
                                 </td>
-                                <td colspan="2"></td>
                                 <td colspan="1">
                                     ${order.status}
                                 </td>

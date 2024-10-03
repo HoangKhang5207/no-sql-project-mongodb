@@ -4,7 +4,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import vn.hoangkhang.laptopshop.service.ProductService;
+import vn.hoangkhang.laptopshop.service.ProductMongoService;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 class CartRequest {
     private long quantity;
-    private long productId;
+    private String productId;
 
     public long getQuantity() {
         return quantity;
@@ -22,11 +22,11 @@ class CartRequest {
         this.quantity = quantity;
     }
 
-    public long getProductId() {
+    public String getProductId() {
         return productId;
     }
 
-    public void setProductId(long productId) {
+    public void setProductId(String productId) {
         this.productId = productId;
     }
 }
@@ -34,10 +34,10 @@ class CartRequest {
 @RestController
 public class CartAPI {
 
-    private final ProductService productService;
+    private final ProductMongoService productMongoService;
 
-    public CartAPI(ProductService productService) {
-        this.productService = productService;
+    public CartAPI(ProductMongoService productMongoService) {
+        this.productMongoService = productMongoService;
     }
 
     @PostMapping("/api/add-product-to-cart")
@@ -47,7 +47,7 @@ public class CartAPI {
 
         HttpSession session = request.getSession(false);
         String email = (String) session.getAttribute("email");
-        this.productService.handleAddProductToCart(cartRequest.getProductId(), email, session,
+        this.productMongoService.handleAddProductToCart(cartRequest.getProductId(), email, session,
                 cartRequest.getQuantity());
 
         int sum = (int) session.getAttribute("sum");

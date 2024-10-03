@@ -18,52 +18,57 @@ import org.springframework.web.bind.annotation.RequestParam;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import vn.hoangkhang.laptopshop.domain.dto.ProductCriteriaDTO;
-import vn.hoangkhang.laptopshop.service.ProductService;
-import vn.hoangkhang.laptopshop.domain.Cart;
-import vn.hoangkhang.laptopshop.domain.CartDetail;
-import vn.hoangkhang.laptopshop.domain.Product;
-import vn.hoangkhang.laptopshop.domain.Product_;
-import vn.hoangkhang.laptopshop.domain.User;
+import vn.hoangkhang.laptopshop.service.ProductMongoService;
+import vn.hoangkhang.laptopshop.service.UserMongoService;
+import vn.hoangkhang.laptopshop.domain.CartDetailMongo;
+import vn.hoangkhang.laptopshop.domain.CartMongo;
+// import vn.hoangkhang.laptopshop.domain.Product;
+import vn.hoangkhang.laptopshop.domain.ProductMongo;
+// import vn.hoangkhang.laptopshop.domain.Product_;
+import vn.hoangkhang.laptopshop.domain.UserMongo;
 
 @Controller
 public class ItemController {
 
-    private final ProductService productService;
+    private final ProductMongoService productMongoService;
+    private final UserMongoService userMongoService;
 
-    public ItemController(ProductService productService) {
-        this.productService = productService;
+    public ItemController(ProductMongoService productMongoService,
+            UserMongoService userMongoService) {
+        this.productMongoService = productMongoService;
+        this.userMongoService = userMongoService;
     }
 
     @GetMapping("/product/{productId}")
-    public String getProductDetail(Model model, @PathVariable Long productId) {
-        Product product = productService.getProductById(productId);
+    public String getProductDetail(Model model, @PathVariable String productId) {
+        ProductMongo product = this.productMongoService.getProductById(productId);
         model.addAttribute("product", product);
         return "client/product/detail";
     }
 
     @PostMapping("/add-product-to-cart/{productId}")
-    public String addProductToCart(@PathVariable Long productId, HttpServletRequest request) {
+    public String addProductToCart(@PathVariable String productId, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
 
         String email = (String) session.getAttribute("email");
 
-        this.productService.handleAddProductToCart(productId, email, session, 1L);
+        this.productMongoService.handleAddProductToCart(productId, email, session, 1L);
         return "redirect:/";
     }
 
     @GetMapping("/cart")
     public String getCartPage(Model model, HttpServletRequest request) {
-        User currentUser = new User();
+        UserMongo currentUser = new UserMongo();
         HttpSession session = request.getSession(false);
-        Long id = (Long) session.getAttribute("id");
+        String id = (String) session.getAttribute("id");
         currentUser.setId(id);
 
-        Cart cart = this.productService.fetchByUser(currentUser);
+        CartMongo cart = this.userMongoService.fetchCartByUser(currentUser);
 
-        List<CartDetail> cartDetails = cart == null ? new ArrayList<CartDetail>() : cart.getCartDetails();
+        List<CartDetailMongo> cartDetails = cart == null ? new ArrayList<CartDetailMongo>() : cart.getCartDetails();
 
         double totalPrice = 0;
-        for (CartDetail cartDetail : cartDetails) {
+        for (CartDetailMongo cartDetail : cartDetails) {
             totalPrice += cartDetail.getPrice() * cartDetail.getQuantity();
         }
 
@@ -76,26 +81,26 @@ public class ItemController {
     }
 
     @PostMapping("/delete-cart-product/{id}")
-    public String deleteCartDetail(@PathVariable Long id, HttpServletRequest request) {
+    public String deleteCartDetail(@PathVariable String id, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-        Long cartDetailId = id;
-        this.productService.handleRemoveCartDetail(cartDetailId, session);
+        String cartDetailId = id;
+        this.productMongoService.handleRemoveCartDetail(cartDetailId, session);
         return "redirect:/cart";
     }
 
     @GetMapping("/checkout")
     public String getCheckOutPage(Model model, HttpServletRequest request) {
-        User currentUser = new User();// null
+        UserMongo currentUser = new UserMongo();// null
         HttpSession session = request.getSession(false);
-        Long id = (Long) session.getAttribute("id");
+        String id = (String) session.getAttribute("id");
         currentUser.setId(id);
 
-        Cart cart = this.productService.fetchByUser(currentUser);
+        CartMongo cart = this.userMongoService.fetchCartByUser(currentUser);
 
-        List<CartDetail> cartDetails = cart == null ? new ArrayList<CartDetail>() : cart.getCartDetails();
+        List<CartDetailMongo> cartDetails = cart == null ? new ArrayList<CartDetailMongo>() : cart.getCartDetails();
 
         double totalPrice = 0;
-        for (CartDetail cd : cartDetails) {
+        for (CartDetailMongo cd : cartDetails) {
             totalPrice += cd.getPrice() * cd.getQuantity();
         }
 
@@ -106,9 +111,10 @@ public class ItemController {
     }
 
     @PostMapping("/confirm-checkout")
-    public String getCheckoutPage(@ModelAttribute("cart") Cart cart) {
-        List<CartDetail> cartDetails = cart == null ? new ArrayList<CartDetail>() : cart.getCartDetails();
-        this.productService.handleUpdateCartBeforeCheckout(cartDetails);
+    public String getCheckoutPage(@ModelAttribute("cart") CartMongo cart, HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        List<CartDetailMongo> cartDetails = cart == null ? new ArrayList<CartDetailMongo>() : cart.getCartDetails();
+        this.productMongoService.handleUpdateCartBeforeCheckout(cartDetails, session);
         return "redirect:/checkout";
     }
 
@@ -118,12 +124,12 @@ public class ItemController {
             @RequestParam("receiverName") String receiverName,
             @RequestParam("receiverAddress") String receiverAddress,
             @RequestParam("receiverPhone") String receiverPhone) {
-        User currentUser = new User();// null
+        UserMongo currentUser = new UserMongo();// null
         HttpSession session = request.getSession(false);
-        Long id = (Long) session.getAttribute("id");
+        String id = (String) session.getAttribute("id");
         currentUser.setId(id);
 
-        this.productService.handlePlaceOrder(currentUser, session, receiverName, receiverAddress, receiverPhone);
+        this.productMongoService.handlePlaceOrder(currentUser, session, receiverName, receiverAddress, receiverPhone);
 
         return "redirect:/thanks";
     }
@@ -135,57 +141,61 @@ public class ItemController {
 
     @PostMapping("/add-product-from-view-detail")
     public String handleAddProductFromViewDetail(
-            @RequestParam("id") Long id,
+            @RequestParam("id") String id,
             @RequestParam("quantity") Long quantity,
             HttpServletRequest request) {
         HttpSession session = request.getSession(false);
 
         String email = (String) session.getAttribute("email");
-        this.productService.handleAddProductToCart(id, email, session, quantity);
+        this.productMongoService.handleAddProductToCart(id, email, session, quantity);
         return "redirect:/product/" + id;
     }
 
-    @GetMapping("/products")
-    public String getProductPage(Model model, ProductCriteriaDTO productCriteriaDTO, HttpServletRequest request) {
-        int page = 1;
-        try {
-            if (productCriteriaDTO.getPage().isPresent()) {
-                // convert from String to int
-                page = Integer.parseInt(productCriteriaDTO.getPage().get());
-            } else {
-                // page = 1
-            }
-        } catch (Exception e) {
-            // page = 1
-            // TODO: handle exception
-        }
+    // @GetMapping("/products")
+    // public String getProductPage(Model model, ProductCriteriaDTO
+    // productCriteriaDTO, HttpServletRequest request) {
+    // int page = 1;
+    // try {
+    // if (productCriteriaDTO.getPage().isPresent()) {
+    // // convert from String to int
+    // page = Integer.parseInt(productCriteriaDTO.getPage().get());
+    // } else {
+    // // page = 1
+    // }
+    // } catch (Exception e) {
+    // // page = 1
+    // // TODO: handle exception
+    // }
 
-        Pageable pageable = PageRequest.of(page - 1, 3);
+    // Pageable pageable = PageRequest.of(page - 1, 3);
 
-        // Sort By Price
-        if (productCriteriaDTO.getSort() != null && productCriteriaDTO.getSort().isPresent()) {
-            String sort = productCriteriaDTO.getSort().get();
-            if (sort.equals("gia-tang-dan")) {
-                pageable = PageRequest.of(page - 1, 3, Sort.by(Product_.PRICE).ascending());
-            } else if (sort.equals("gia-giam-dan")) {
-                pageable = PageRequest.of(page - 1, 3, Sort.by(Product_.PRICE).descending());
-            }
-        }
+    // // Sort By Price
+    // if (productCriteriaDTO.getSort() != null &&
+    // productCriteriaDTO.getSort().isPresent()) {
+    // String sort = productCriteriaDTO.getSort().get();
+    // if (sort.equals("gia-tang-dan")) {
+    // pageable = PageRequest.of(page - 1, 3, Sort.by(Product_.PRICE).ascending());
+    // } else if (sort.equals("gia-giam-dan")) {
+    // pageable = PageRequest.of(page - 1, 3, Sort.by(Product_.PRICE).descending());
+    // }
+    // }
 
-        Page<Product> prs = this.productService.getAllProductsWithSpec(pageable, productCriteriaDTO);
+    // Page<Product> prs = this.productService.getAllProductsWithSpec(pageable,
+    // productCriteriaDTO);
 
-        List<Product> products = prs.getContent().size() > 0 ? prs.getContent() : new ArrayList<Product>();
+    // List<Product> products = prs.getContent().size() > 0 ? prs.getContent() : new
+    // ArrayList<Product>();
 
-        String qs = request.getQueryString();
-        if (qs != null && !qs.isBlank()) {
-            // remove page
-            qs = qs.replace("page=" + page, "");
-        }
+    // String qs = request.getQueryString();
+    // if (qs != null && !qs.isBlank()) {
+    // // remove page
+    // qs = qs.replace("page=" + page, "");
+    // }
 
-        model.addAttribute("products", products);
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", prs.getTotalPages());
-        model.addAttribute("queryString", qs);
-        return "client/product/show";
-    }
+    // model.addAttribute("products", products);
+    // model.addAttribute("currentPage", page);
+    // model.addAttribute("totalPages", prs.getTotalPages());
+    // model.addAttribute("queryString", qs);
+    // return "client/product/show";
+    // }
 }

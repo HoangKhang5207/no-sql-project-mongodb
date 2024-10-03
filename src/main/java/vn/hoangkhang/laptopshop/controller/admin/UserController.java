@@ -1,5 +1,6 @@
 package vn.hoangkhang.laptopshop.controller.admin;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,20 +20,23 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.validation.Valid;
-import vn.hoangkhang.laptopshop.domain.User;
+import vn.hoangkhang.laptopshop.domain.OrderMongo;
+import vn.hoangkhang.laptopshop.domain.UserMongo;
 import vn.hoangkhang.laptopshop.service.UploadService;
-import vn.hoangkhang.laptopshop.service.UserService;
+import vn.hoangkhang.laptopshop.service.UserMongoService;
+import vn.hoangkhang.laptopshop.util.RoleUtil;
 
 @Controller
 public class UserController {
 
-    private final UserService userService;
+    private final UserMongoService userMongoService;
     private final UploadService uploadService;
     private final PasswordEncoder passwordEncoder;
 
     // DI: Dependency Injection
-    public UserController(UserService userService, UploadService uploadService, PasswordEncoder passwordEncoder) {
-        this.userService = userService;
+    public UserController(UserMongoService userMongoService, UploadService uploadService,
+            PasswordEncoder passwordEncoder) {
+        this.userMongoService = userMongoService;
         this.uploadService = uploadService;
         this.passwordEncoder = passwordEncoder;
     }
@@ -51,10 +55,10 @@ public class UserController {
         } catch (Exception e) {
             // page = 1
         }
-        Pageable pageable = PageRequest.of(page - 1, 4);
+        Pageable pageable = PageRequest.of(page - 1, 5);
 
-        Page<User> pageUser = this.userService.getAllUsers(pageable);
-        List<User> users = pageUser.getContent();
+        Page<UserMongo> pageUser = this.userMongoService.getAllUsers(pageable);
+        List<UserMongo> users = pageUser.getContent();
 
         model.addAttribute("users", users);
 
@@ -66,14 +70,14 @@ public class UserController {
     // Rendering Create User Page
     @GetMapping("/admin/user/create")
     public String getCreateUserPage(Model model) {
-        model.addAttribute("newUser", new User());
+        model.addAttribute("newUser", new UserMongo());
         return "admin/user/create";
     }
 
     // Handling Create User
     @PostMapping("/admin/user/create")
     public String createUserPage(Model model,
-            @Valid @ModelAttribute("newUser") User hkhang,
+            @Valid @ModelAttribute("newUser") UserMongo hkhang,
             BindingResult bindingResult,
             @RequestParam("khangFile") MultipartFile file) {
         List<FieldError> errors = bindingResult.getFieldErrors();
@@ -91,26 +95,37 @@ public class UserController {
 
         hkhang.setAvatar(avatar);
         hkhang.setPassword(hashPassword);
-        hkhang.setRole(userService.getRoleByName(hkhang.getRole().getName()));
+
+        if (hkhang.getRole().getName().equals("USER")) {
+            hkhang.getRole().setId(RoleUtil.USER.getId());
+            hkhang.getRole().setDescription(RoleUtil.USER.getDescription());
+        } else {
+            hkhang.getRole().setId(RoleUtil.ADMIN.getId());
+            hkhang.getRole().setDescription(RoleUtil.ADMIN.getDescription());
+        }
+
+        hkhang.setCart(null);
+        hkhang.setOrders(new ArrayList<OrderMongo>());
 
         // save to db
-        userService.handleSaveUser(hkhang);
+        this.userMongoService.handleSaveUser(hkhang);
+
         return "redirect:/admin/user";
     }
 
     // Rendering User Details by Id
     @GetMapping("/admin/user/{userId}")
-    public String getUserDetailPage(Model model, @PathVariable Long userId) {
+    public String getUserDetailPage(Model model, @PathVariable String userId) {
         model.addAttribute("userId", userId);
-        User user = userService.getUserById(userId);
+        UserMongo user = this.userMongoService.getUserById(userId);
         model.addAttribute("user", user);
         return "admin/user/user_detail";
     }
 
     // Rendering Update User Page by Id
     @GetMapping("/admin/user/update/{userId}")
-    public String getUpdateUserPage(Model model, @PathVariable Long userId) {
-        User updateUser = userService.getUserById(userId);
+    public String getUpdateUserPage(Model model, @PathVariable String userId) {
+        UserMongo updateUser = this.userMongoService.getUserById(userId);
         model.addAttribute("updateUser", updateUser);
         return "admin/user/update";
     }
@@ -118,7 +133,7 @@ public class UserController {
     // Handling Update User
     @PostMapping("/admin/user/update")
     public String updateUserPage(Model model,
-            @ModelAttribute("updateUser") User hkhang,
+            @ModelAttribute("updateUser") UserMongo hkhang,
             // BindingResult bindingResult,
             @RequestParam("khangFile") MultipartFile file) {
 
@@ -132,22 +147,24 @@ public class UserController {
         // return "admin/user/update";
         // }
 
-        userService.handleUpdateUser(hkhang);
+        this.userMongoService.handleUpdateUser(hkhang);
+
         return "redirect:/admin/user";
     }
 
     // Rendering Delete User Confirmation
     @GetMapping("/admin/user/delete/{userId}")
-    public String getDeleteUserPage(Model model, @PathVariable Long userId) {
+    public String getDeleteUserPage(Model model, @PathVariable String userId) {
         model.addAttribute("userId", userId);
-        model.addAttribute("newUser", new User());
+        model.addAttribute("newUser", new UserMongo());
         return "admin/user/delete";
     }
 
     // Handling Delete User
     @PostMapping("/admin/user/delete")
-    public String deleteUserPage(@ModelAttribute("newUser") User user) {
-        userService.handleDeleteUser(user.getId());
+    public String deleteUserPage(@ModelAttribute("newUser") UserMongo user) {
+        this.userMongoService.handleDeleteUser(user.getId());
+
         return "redirect:/admin/user";
     }
 }

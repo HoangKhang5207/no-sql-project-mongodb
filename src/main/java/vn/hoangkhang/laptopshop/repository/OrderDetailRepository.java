@@ -1,11 +1,12 @@
-package vn.hoangkhang.laptopshop.repository;
+// package vn.hoangkhang.laptopshop.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+// import org.springframework.data.jpa.repository.JpaRepository;
+// import org.springframework.stereotype.Repository;
 
-import vn.hoangkhang.laptopshop.domain.OrderDetail;
+// import vn.hoangkhang.laptopshop.domain.OrderDetail;
 
-@Repository
-public interface OrderDetailRepository extends JpaRepository<OrderDetail, Long> {
+// @Repository
+// public interface OrderDetailRepository extends JpaRepository<OrderDetail,
+// Long> {
 
-}
+// }

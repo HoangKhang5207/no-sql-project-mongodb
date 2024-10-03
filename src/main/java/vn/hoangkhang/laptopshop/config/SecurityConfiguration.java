@@ -1,5 +1,7 @@
 package vn.hoangkhang.laptopshop.config;
 
+import java.time.Duration;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -11,14 +13,17 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.session.security.web.authentication.SpringSessionRememberMeServices;
+import org.springframework.session.data.mongo.JdkMongoSessionConverter;
+//import org.springframework.session.security.web.authentication.SpringSessionRememberMeServices;
+import org.springframework.session.data.mongo.config.annotation.web.http.EnableMongoHttpSession;
 
 import jakarta.servlet.DispatcherType;
 import vn.hoangkhang.laptopshop.service.CustomUserDetailsService;
-import vn.hoangkhang.laptopshop.service.UserService;
+import vn.hoangkhang.laptopshop.service.UserMongoService;
 
 @Configuration
 @EnableMethodSecurity(securedEnabled = true)
+// @EnableMongoHttpSession
 public class SecurityConfiguration {
 
     @Bean
@@ -27,8 +32,8 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    UserDetailsService userDetailsService(UserService userService) {
-        return new CustomUserDetailsService(userService);
+    UserDetailsService userDetailsService(UserMongoService userMongoService) {
+        return new CustomUserDetailsService(userMongoService);
     }
 
     @Bean
@@ -47,13 +52,19 @@ public class SecurityConfiguration {
         return new CustomSuccessHandler();
     }
 
-    @Bean
-    SpringSessionRememberMeServices rememberMeServices() {
-        SpringSessionRememberMeServices rememberMeServices = new SpringSessionRememberMeServices();
-        // optionally customize
-        rememberMeServices.setAlwaysRemember(true);
-        return rememberMeServices;
-    }
+    // @Bean
+    // SpringSessionRememberMeServices rememberMeServices() {
+    // SpringSessionRememberMeServices rememberMeServices = new
+    // SpringSessionRememberMeServices();
+    // // optionally customize
+    // rememberMeServices.setAlwaysRemember(true);
+    // return rememberMeServices;
+    // }
+
+    // @Bean
+    // public JdkMongoSessionConverter jdkMongoSessionConverter() {
+    // return new JdkMongoSessionConverter(Duration.ofMinutes(30));
+    // }
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -62,7 +73,8 @@ public class SecurityConfiguration {
                         .dispatcherTypeMatchers(DispatcherType.FORWARD,
                                 DispatcherType.INCLUDE)
                         .permitAll()
-                        .requestMatchers("/", "/login", "/register", "/product/**", "/products/**", "/client/**", "/css/**", "/js/**",
+                        .requestMatchers("/", "/login", "/register", "/product/**", "/products/**", "/client/**",
+                                "/css/**", "/js/**",
                                 "/images/**")
                         .permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
@@ -76,7 +88,7 @@ public class SecurityConfiguration {
 
                 .logout(logout -> logout.deleteCookies("JSESSIONID").invalidateHttpSession(true))
 
-                .rememberMe(r -> r.rememberMeServices(rememberMeServices()))
+                // .rememberMe(r -> r.rememberMeServices(rememberMeServices()))
                 .formLogin(formLogin -> formLogin
                         .loginPage("/login")
                         .failureUrl("/login?error")

@@ -44,80 +44,85 @@ uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
                   >
                 </div>
                 <hr />
-                <table class="table table-bordered table-hover">
-                  <thead>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Price</th>
-                    <th>Factory</th>
-                    <th>Action</th>
-                  </thead>
-                  <tbody>
-                    <c:forEach var="product" items="${products}">
-                      <tr>
-                        <td>${product.id}</td>
-                        <td>${product.name}</td>
-                        <td>
-                          <fmt:formatNumber
-                            value="${product.price}"
-                            type="number"
-                          />
-                          đ
-                        </td>
-                        <td>${product.factory}</td>
-                        <td>
-                          <a
-                            href="/admin/product/${product.id}"
-                            class="btn btn-success"
-                            >View</a
-                          >
-                          <a
-                            href="/admin/product/update/${product.id}"
-                            class="btn btn-warning"
-                            >Update</a
-                          >
-                          <a
-                            href="/admin/product/delete/${product.id}"
-                            class="btn btn-danger"
-                            >Delete</a
-                          >
-                        </td>
-                      </tr>
-                    </c:forEach>
-                  </tbody>
-                </table>
-                <nav aria-label="Page navigation example">
-                  <ul class="pagination justify-content-center">
-                    <li class="page-item">
-                      <a
-                        class="${1 eq currentPage ? 'disabled page-link' : 'page-link'}"
-                        href="/admin/product?page=${currentPage - 1}"
-                        aria-label="Previous"
-                      >
-                        <span aria-hidden="true">&laquo;</span>
-                      </a>
-                    </li>
-                    <c:forEach var="index" begin="0" end="${totalPages - 1}">
+                <c:if test="${products.size() == 0}">
+                  <h2 class="alert alert-info text-center">No products found.</h2>
+                </c:if>
+                <c:if test="${products.size() > 0}">
+                  <table class="table table-bordered table-hover">
+                    <thead>
+                      <th>ID</th>
+                      <th>Name</th>
+                      <th>Price</th>
+                      <th>Factory</th>
+                      <th>Action</th>
+                    </thead>
+                    <tbody>
+                      <c:forEach var="product" items="${products}">
+                        <tr>
+                          <td>${product.id}</td>
+                          <td>${product.name}</td>
+                          <td>
+                            <fmt:formatNumber
+                              value="${product.price}"
+                              type="number"
+                            />
+                            đ
+                          </td>
+                          <td>${product.factory}</td>
+                          <td>
+                            <a
+                              href="/admin/product/${product.id}"
+                              class="btn btn-success"
+                              >View</a
+                            >
+                            <a
+                              href="/admin/product/update/${product.id}"
+                              class="btn btn-warning"
+                              >Update</a
+                            >
+                            <a
+                              href="/admin/product/delete/${product.id}"
+                              class="btn btn-danger"
+                              >Delete</a
+                            >
+                          </td>
+                        </tr>
+                      </c:forEach>
+                    </tbody>
+                  </table>
+                  <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
                       <li class="page-item">
                         <a
-                          class="${(index + 1) eq currentPage ? 'active page-link' : 'page-link'}"
-                          href="/admin/product?page=${index + 1}"
+                          class="${1 eq currentPage ? 'disabled page-link' : 'page-link'}"
+                          href="/admin/product?page=${currentPage - 1}"
+                          aria-label="Previous"
                         >
-                          ${index + 1}
+                          <span aria-hidden="true">&laquo;</span>
                         </a>
                       </li>
-                    </c:forEach>
-                    <li class="page-item">
-                      <a
-                        class="${totalPages eq currentPage ? 'disabled page-link' : 'page-link'}"
-                        href="/admin/product?page=${currentPage + 1}"
-                        aria-label="Previous"
-                      >
-                        <span aria-hidden="true">&raquo;</span>
-                      </a>
-                    </li>
-                  </ul>
-                </nav>
+                      <c:forEach var="index" begin="0" end="${totalPages - 1}">
+                        <li class="page-item">
+                          <a
+                            class="${(index + 1) eq currentPage ? 'active page-link' : 'page-link'}"
+                            href="/admin/product?page=${index + 1}"
+                          >
+                            ${index + 1}
+                          </a>
+                        </li>
+                      </c:forEach>
+                      <li class="page-item">
+                        <a
+                          class="${totalPages eq currentPage ? 'disabled page-link' : 'page-link'}"
+                          href="/admin/product?page=${currentPage + 1}"
+                          aria-label="Previous"
+                        >
+                          <span aria-hidden="true">&raquo;</span>
+                        </a>
+                      </li>
+                    </ul>
+                  </nav>
+                </c:if>
               </div>
             </div>
           </div>

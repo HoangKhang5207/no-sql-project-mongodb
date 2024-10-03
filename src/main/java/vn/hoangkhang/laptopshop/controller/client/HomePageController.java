@@ -1,5 +1,6 @@
 package vn.hoangkhang.laptopshop.controller.client;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -16,35 +17,35 @@ import org.springframework.web.bind.annotation.PostMapping;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
-import vn.hoangkhang.laptopshop.domain.Order;
-import vn.hoangkhang.laptopshop.domain.Product;
-import vn.hoangkhang.laptopshop.domain.User;
+import vn.hoangkhang.laptopshop.domain.CartMongo;
+import vn.hoangkhang.laptopshop.domain.OrderMongo;
+import vn.hoangkhang.laptopshop.domain.ProductMongo;
+import vn.hoangkhang.laptopshop.domain.RoleMongo;
+import vn.hoangkhang.laptopshop.domain.UserMongo;
 import vn.hoangkhang.laptopshop.domain.dto.RegisterDTO;
-import vn.hoangkhang.laptopshop.service.OrderService;
-import vn.hoangkhang.laptopshop.service.ProductService;
-import vn.hoangkhang.laptopshop.service.UserService;
+import vn.hoangkhang.laptopshop.service.ProductMongoService;
+import vn.hoangkhang.laptopshop.service.UserMongoService;
+import vn.hoangkhang.laptopshop.util.RoleUtil;
 
 @Controller
 public class HomePageController {
 
-    private final ProductService productService;
-    private final UserService userService;
+    private final ProductMongoService productMongoService;
+    private final UserMongoService userMongoService;
     private final PasswordEncoder passwordEncoder;
-    private final OrderService orderService;
 
-    public HomePageController(ProductService productService, UserService userService,
-            PasswordEncoder passwordEncoder, OrderService orderService) {
-        this.productService = productService;
-        this.userService = userService;
+    public HomePageController(UserMongoService userMongoService, ProductMongoService productMongoService,
+            PasswordEncoder passwordEncoder) {
+        this.userMongoService = userMongoService;
+        this.productMongoService = productMongoService;
         this.passwordEncoder = passwordEncoder;
-        this.orderService = orderService;
     }
 
     @GetMapping("/")
     public String getHomePage(Model model) {
-        Pageable pageable = PageRequest.of(0, 10);
-        Page<Product> pageProduct = this.productService.getAllProducts(pageable);
-        List<Product> products = pageProduct.getContent();
+        Pageable pageable = PageRequest.of(0, 12);
+        Page<ProductMongo> pageProduct = this.productMongoService.getAllProductsRandom(pageable);
+        List<ProductMongo> products = pageProduct.getContent();
         model.addAttribute("products", products);
         return "client/homepage/show";
     }
@@ -65,14 +66,18 @@ public class HomePageController {
             return "client/auth/register";
         }
 
-        User user = userService.registerDTOToUser(registerUser);
+        UserMongo user = this.userMongoService.registerDTOToUser(registerUser);
 
         String hashPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(hashPassword);
-        user.setRole(userService.getRoleByName("USER"));
+
+        user.setRole(new RoleMongo(RoleUtil.USER.getId(), "USER", RoleUtil.USER.getDescription()));
+
+        user.setCart(new CartMongo());
+        user.setOrders(new ArrayList<OrderMongo>());
 
         // save to db
-        userService.handleSaveUser(user);
+        this.userMongoService.handleSaveUser(user);
 
         return "redirect:/login";
     }
@@ -91,15 +96,14 @@ public class HomePageController {
 
     @GetMapping("/order-history")
     public String getOrderHistoryPage(Model model, HttpServletRequest request) {
-        User currentUser = new User();// null
+        UserMongo currentUser = new UserMongo();// null
         HttpSession session = request.getSession(false);
-        long id = (long) session.getAttribute("id");
+        String id = (String) session.getAttribute("id");
         currentUser.setId(id);
 
-        List<Order> orders = this.orderService.fetchOrderByUser(currentUser);
+        List<OrderMongo> orders = this.userMongoService.fetchOrderByUser(currentUser);
         model.addAttribute("orders", orders);
 
         return "client/cart/order-history";
     }
-
 }
