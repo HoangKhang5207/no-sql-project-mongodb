@@ -73,7 +73,7 @@ public class HomePageController {
 
         user.setRole(new RoleMongo(RoleUtil.USER.getId(), "USER", RoleUtil.USER.getDescription()));
 
-        user.setCart(new CartMongo());
+        user.setCart(null);
         user.setOrders(new ArrayList<OrderMongo>());
 
         // save to db

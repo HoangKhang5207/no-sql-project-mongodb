@@ -68,12 +68,12 @@
             </ol>
           </nav>
         </div>
-        <c:if test="${cartDetails.size() == 0}">
+        <c:if test="${ cartDetails.size() == 0 }">
           <h1 class="alert alert-info text-center">
             Không có sản phẩm nào trong giỏ hàng! Hãy mua hàng nào!
           </h1>
         </c:if>
-        <c:if test="${cartDetails.size() > 0}">
+        <c:if test="${ cartDetails.size() > 0 }">
           <div class="table-responsive">
             <table class="table">
               <thead>
