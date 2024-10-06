@@ -62,7 +62,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
                             />
                             đ
                           </td>
-                          <td>${order.user.fullName}</td>
+                          <td>${order.receiverName}</td>
                           <td>${order.status}</td>
                           <td>
                             <a
@@ -74,11 +74,6 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
                               href="/admin/order/update/${order.id}"
                               class="btn btn-warning mx-2"
                               >Update</a
-                            >
-                            <a
-                              href="/admin/order/delete/${order.id}"
-                              class="btn btn-danger"
-                              >Delete</a
                             >
                           </td>
                         </tr>

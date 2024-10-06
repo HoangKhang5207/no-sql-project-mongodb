@@ -1,11 +1,9 @@
 package vn.hoangkhang.laptopshop.controller.admin;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Optional;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,79 +12,70 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-// import vn.hoangkhang.laptopshop.domain.Order;
-import vn.hoangkhang.laptopshop.service.ProductMongoService;
+import vn.hoangkhang.laptopshop.domain.OrderDetailMongo;
+import vn.hoangkhang.laptopshop.domain.OrderMongo;
+import vn.hoangkhang.laptopshop.domain.dto.AggregatedOrders;
+import vn.hoangkhang.laptopshop.service.UserMongoService;
 
 @Controller
 public class OrderController {
+    private final UserMongoService userMongoService;
 
-    // private final OrderService orderService;
-    // private final ProductMongoService productMongoService;
+    public OrderController(UserMongoService userMongoService) {
+        this.userMongoService = userMongoService;
+    }
 
-    // public OrderController(OrderService orderService, ProductMongoService
-    // productMongoService) {
-    // this.orderService = orderService;
-    // this.productMongoService = productMongoService;
-    // }
+    @GetMapping("/admin/order")
+    public String getDashboard(Model model, @RequestParam("page") Optional<String> pageOptional) {
+        int page = 1;
+        try {
+            if (pageOptional.isPresent()) {
+                // convert from String to int
+                page = Integer.parseInt(pageOptional.get());
+            } else {
+                // page = 1
+            }
+        } catch (Exception e) {
+            // page = 1
+        }
 
-    // @GetMapping("/admin/order")
-    // public String getDashboard(Model model, @RequestParam("page")
-    // Optional<String> pageOptional) {
-    // int page = 1;
-    // try {
-    // if (pageOptional.isPresent()) {
-    // // convert from String to int
-    // page = Integer.parseInt(pageOptional.get());
-    // } else {
-    // // page = 1
-    // }
-    // } catch (Exception e) {
-    // // page = 1
-    // }
-    // Pageable pageable = PageRequest.of(page - 1, 4);
+        int size = 5;
+        int skip = (page - 1) * size;
 
-    // Page<Order> pageOrder = this.orderService.fetchAllOrders(pageable);
-    // List<Order> orders = pageOrder.getContent();
+        AggregatedOrders pageOrder = this.userMongoService.fetchAllOrders();
+        List<OrderMongo> orders = pageOrder.getOrdersWithPagination(skip, size);
 
-    // model.addAttribute("orders", orders);
+        model.addAttribute("orders", orders);
 
-    // model.addAttribute("currentPage", page);
-    // model.addAttribute("totalPages", pageOrder.getTotalPages());
-    // return "admin/order/show";
-    // }
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", pageOrder.getTotalPages(size));
+        return "admin/order/show";
+    }
 
-    // @GetMapping("/admin/order/{id}")
-    // public String getOrderDetailPage(Model model, @PathVariable long id) {
-    // Order order = this.orderService.fetchOrderById(id).get();
-    // model.addAttribute("order", order);
-    // model.addAttribute("id", id);
-    // model.addAttribute("orderDetails", order.getOrderDetails());
-    // return "admin/order/detail";
-    // }
+    @GetMapping("/admin/order/{id}")
+    public String getOrderDetailPage(Model model, @PathVariable String id) {
+        AggregatedOrders aggOrders = this.userMongoService.fetchAllOrders();
+        OrderMongo order = aggOrders.findOrderById(id);
+        List<OrderDetailMongo> orderDetails = order == null ? new ArrayList<OrderDetailMongo>()
+                : order.getOrderDetails();
+        model.addAttribute("order", order);
+        model.addAttribute("id", id);
+        model.addAttribute("totalPrices", order == null ? 0 : order.getTotalPrice());
+        model.addAttribute("orderDetails", orderDetails);
+        return "admin/order/detail";
+    }
 
-    // @GetMapping("/admin/order/delete/{id}")
-    // public String getDeleteOrderPage(Model model, @PathVariable long id) {
-    // model.addAttribute("id", id);
-    // model.addAttribute("newOrder", new Order());
-    // return "admin/order/delete";
-    // }
+    @GetMapping("/admin/order/update/{id}")
+    public String getUpdateOrderPage(Model model, @PathVariable String id) {
+        AggregatedOrders aggOrders = this.userMongoService.fetchAllOrders();
+        OrderMongo currentOrder = aggOrders.findOrderById(id);
+        model.addAttribute("newOrder", currentOrder);
+        return "admin/order/update";
+    }
 
-    // @PostMapping("/admin/order/delete")
-    // public String postDeleteOrder(@ModelAttribute("newOrder") Order order) {
-    // this.orderService.deleteOrderById(order.getId());
-    // return "redirect:/admin/order";
-    // }
-
-    // @GetMapping("/admin/order/update/{id}")
-    // public String getUpdateOrderPage(Model model, @PathVariable long id) {
-    // Optional<Order> currentOrder = this.orderService.fetchOrderById(id);
-    // model.addAttribute("newOrder", currentOrder.get());
-    // return "admin/order/update";
-    // }
-
-    // @PostMapping("/admin/order/update")
-    // public String handleUpdateOrder(@ModelAttribute("newOrder") Order order) {
-    // this.orderService.updateOrder(order);
-    // return "redirect:/admin/order";
-    // }
+    @PostMapping("/admin/order/update")
+    public String handleUpdateOrder(@ModelAttribute("newOrder") OrderMongo order) {
+        this.userMongoService.updateOrder(order);
+        return "redirect:/admin/order";
+    }
 }

@@ -67,12 +67,7 @@
 
                     <div class="mb-3 col-12 col-md-6">
                       <label class="form-label">User:</label>
-                      <form:input
-                        type="text"
-                        class="form-control"
-                        disabled="true"
-                        path="user.fullName"
-                      />
+                      <p>${newOrder.receiverName}</p>
                     </div>
 
                     <div class="mb-3 col-12 col-md-6">

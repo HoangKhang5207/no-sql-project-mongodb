@@ -12,6 +12,7 @@ import vn.hoangkhang.laptopshop.domain.CartDetailMongo;
 import vn.hoangkhang.laptopshop.domain.CartMongo;
 import vn.hoangkhang.laptopshop.domain.OrderMongo;
 import vn.hoangkhang.laptopshop.domain.UserMongo;
+import vn.hoangkhang.laptopshop.domain.dto.AggregatedOrders;
 import vn.hoangkhang.laptopshop.domain.dto.RegisterDTO;
 import vn.hoangkhang.laptopshop.repository.ProductMongoRepository;
 import vn.hoangkhang.laptopshop.repository.UserMongoRepository;
@@ -89,7 +90,7 @@ public class UserMongoService {
     }
 
     public Long countOrders() {
-        return 0L;
+        return Long.valueOf(this.fetchAllOrders().getOrders().size());
     }
 
     public CartDetailMongo findByCartAndProduct(String cartId, String productId) {
@@ -115,5 +116,24 @@ public class UserMongoService {
         Optional<UserMongo> user = this.userMongoRepository.findById(userRequest.getId());
 
         return user.isPresent() ? user.get().getOrders() : null;
+    }
+
+    public AggregatedOrders fetchAllOrders() {
+        return this.userMongoRepository.findAllNonEmptyOrders();
+    }
+
+    public void updateOrder(OrderMongo orderRequest) {
+        Optional<UserMongo> userOpt = this.userMongoRepository.findOrderById(orderRequest.getId());
+
+        if (userOpt.isPresent()) {
+            UserMongo currentUser = userOpt.get();
+            UserMongo user = this.userMongoRepository.findById(currentUser.getId()).get();
+            OrderMongo order = currentUser.getOrders().get(0);
+            int idxOrder = user.getOrders().indexOf(order);
+            order.setStatus(orderRequest.getStatus());
+            user.getOrders().set(idxOrder, order);
+
+            this.userMongoRepository.save(user);
+        }
     }
 }

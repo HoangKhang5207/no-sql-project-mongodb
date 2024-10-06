@@ -103,7 +103,15 @@
                                                     </td>
                                                 </tr>
                                             </c:forEach>
-
+                                                <tr>
+                                                    <td colspan="3"></td>
+                                                    <td>Tổng cộng:</td>
+                                                    <td>
+                                                        <fmt:formatNumber type="number"
+                                                                value="${totalPrices}" />
+                                                            đ
+                                                    </td>
+                                                </tr>
                                         </tbody>
                                     </table>
                                 </div>
