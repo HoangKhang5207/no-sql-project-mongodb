@@ -64,8 +64,8 @@
                     <thead>
                         <tr>
                             <th scope="col">Sản phẩm</th>
-                            <th scope="col">Tên</th>
-                            <th scope="col">Giá cả</th>
+                            <th scope="col">Tên sản phẩm</th>
+                            <th scope="col">Giá</th>
                             <th scope="col">Số lượng</th>
                             <th scope="col">Thành tiền</th>
                             <th scope="col">Trạng thái</th>
@@ -75,20 +75,42 @@
                         <c:if test="${ empty orders }">
                             <tr>
                                 <td colspan="6">
-                                    Không có đơn hàng nào được tạo
+                                    <p class="text-center fw-bold alert alert-info">
+                                        Không có đơn hàng nào được tạo
+                                    </p>
                                 </td>
                             </tr>
                         </c:if>
                         <c:forEach var="order" items="${orders}">
                             <tr>
-                                <td colspan="2">Order Id = ${order.id}</td>
-                                <td colspan="2"></td>
+                                <td colspan="6">
+                                    <br />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <span class="fw-bold">Mã đơn hàng: ${order.id}</span>
+                                </td>
+                                <td colspan="1"></td>
                                 <td colspan="1">
-                                    <fmt:formatNumber type="number" value=" ${order.totalPrice}" />
-                                    đ
+                                    <span class="fw-bold">Tổng tiền:</span>
                                 </td>
                                 <td colspan="1">
-                                    ${order.status}
+                                    <span class="fw-bold">
+                                        <fmt:formatNumber type="number" value=" ${order.totalPrice}" />
+                                        đ
+                                    </span>
+                                </td>
+                                <td colspan="1">
+                                    <c:if test="${order.status.equals('PENDING')}">
+                                        <span class="fw-bold text-warning">ĐANG CHỜ XỬ LÝ</span>
+                                    </c:if>
+                                    <c:if test="${order.status.equals('SHIPPING')}">
+                                        <span class="fw-bold text-info">ĐANG VẬN CHUYỂN</span>
+                                    </c:if>
+                                    <c:if test="${order.status.equals('COMPLETE')}">
+                                        <span class="fw-bold text-success">GIAO HÀNG THÀNH CÔNG</span>
+                                    </c:if>
                                 </td>
                             </tr>
                             <c:forEach var="orderDetail" items="${order.orderDetails}">
@@ -126,7 +148,14 @@
                                                 value="${orderDetail.price * orderDetail.quantity}" /> đ
                                         </p>
                                     </td>
-                                    <td></td>
+                                    <td>
+                                        <p class="mb-0 mt-4">
+                                            <c:if test="${order.status.equals('COMPLETE')}">
+                                                <a href="/review/${orderDetail.product.id}" 
+                                                    class="alert alert-warning">Đánh giá sản phẩm</a>
+                                            </c:if>
+                                        </p>
+                                    </td>
                                 </tr>
                             </c:forEach>
                         </c:forEach>

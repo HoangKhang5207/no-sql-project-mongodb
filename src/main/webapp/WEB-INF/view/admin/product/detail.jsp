@@ -24,38 +24,38 @@
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">
-                    <h1 class="mt-4">Manage Products</h1>
+                    <h1 class="mt-4">Quản lý sản phẩm</h1>
                     <ol class="breadcrumb mb-4">
                         <li class="breadcrumb-item">
-                            <a href="/admin">Dashboard</a>
+                            <a href="/admin">Bảng điều khiển</a>
                         </li>
                         <li class="breadcrumb-item active">
-                            Products
+                            Sản phẩm
                         </li>
                     </ol>
                     <div class="row mt-5">
                         <div class="col-12 mx-auto">
                             <div class="d-flex justify-content-between">
-                                <h3>Product Details with id = ${product.id}</h3>
+                                <h3>Chi tiết sản phẩm với mã: ${product.id}</h3>
                             </div>
                             <hr>
                             <div class="card" style="width: 60%;">
                                 <img class="card-img-top mx-auto w-50" 
                                         src="/images/product/${product.image}" alt="Card image top">
                                 <div class="card-header">
-                                    Product information
+                                    Thông tin sản phẩm
                                 </div>
                                 <ul class="list-group list-group-flush">
-                                    <li class="list-group-item">Name: ${product.name}</li>
-                                    <li class="list-group-item">Price: <fmt:formatNumber value="${product.price}" type="number" /> đ </li>
-                                    <li class="list-group-item">Quantity: ${product.quantity}</li>
-                                    <li class="list-group-item">Detail Description: ${product.detailDesc}</li>
-                                    <li class="list-group-item">Short Description: ${product.shortDesc}</li>
-                                    <li class="list-group-item">Factory: ${product.factory}</li>
-                                    <li class="list-group-item">Target: ${product.target}</li>
+                                    <li class="list-group-item">Tên sản phẩm: ${product.name}</li>
+                                    <li class="list-group-item">Giá: <fmt:formatNumber value="${product.price}" type="number" /> đ </li>
+                                    <li class="list-group-item">Số lượng: ${product.quantity}</li>
+                                    <li class="list-group-item">Mô tả chi tiết: ${product.detailDesc}</li>
+                                    <li class="list-group-item">Mô tả ngắn: ${product.shortDesc}</li>
+                                    <li class="list-group-item">Hãng sản xuất: ${product.factory}</li>
+                                    <li class="list-group-item">Mục đích sử dụng: ${product.target}</li>
                                 </ul>
                             </div>
-                            <a href="/admin/product" class="btn btn-success mt-2">Back</a>
+                            <a href="/admin/product" class="btn btn-success mt-2">Quay về</a>
                         </div>
                     </div>
                 </div>

@@ -10,9 +10,9 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="Hỏi Dân IT - Dự án laptopshop" />
-    <meta name="author" content="Hỏi Dân IT" />
-    <title>Detail Order - Hỏi Dân IT</title>
+    <meta name="description" content="Hoang Khang - Dự án laptopshop" />
+    <meta name="author" content="Hoang Khang" />
+    <title>Detail Order - Hoang Khang</title>
     <link href="/css/styles.css" rel="stylesheet" />
 
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js"
@@ -26,17 +26,17 @@
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">
-                    <h1 class="mt-4">Orders</h1>
+                    <h1 class="mt-4">Quản lý đơn hàng</h1>
                     <ol class="breadcrumb mb-4">
-                        <li class="breadcrumb-item"><a href="/admin">Dashboard</a></li>
-                        <li class="breadcrumb-item"><a href="/admin/order">Order</a></li>
-                        <li class="breadcrumb-item active">View detail</li>
+                        <li class="breadcrumb-item"><a href="/admin">Bảng điều khiển</a></li>
+                        <li class="breadcrumb-item"><a href="/admin/order">Đơn hàng</a></li>
+                        <li class="breadcrumb-item active">Chi tiết đơn hàng</li>
                     </ol>
                     <div class="mt-5">
                         <div class="row">
                             <div class="col-12 mx-auto">
                                 <div class="d-flex justify-content-between">
-                                    <h3>Order detail with id = ${id}</h3>
+                                    <h3>Chi tiết đơn hàng với mã: ${id}</h3>
                                 </div>
 
                                 <hr />
@@ -46,8 +46,8 @@
                                         <thead>
                                             <tr>
                                                 <th scope="col">Sản phẩm</th>
-                                                <th scope="col">Tên</th>
-                                                <th scope="col">Giá cả</th>
+                                                <th scope="col">Tên sản phẩm</th>
+                                                <th scope="col">Giá</th>
                                                 <th scope="col">Số lượng</th>
                                                 <th scope="col">Thành tiền</th>
                                             </tr>
@@ -56,7 +56,7 @@
                                             <c:if test="${ empty orderDetails}">
                                                 <tr>
                                                     <td colspan="6">
-                                                        Không có sản phẩm trong giỏ hàng
+                                                        Không có đơn hàng nào tồn tại.
                                                     </td>
                                                 </tr>
                                             </c:if>
@@ -105,17 +105,23 @@
                                             </c:forEach>
                                                 <tr>
                                                     <td colspan="3"></td>
-                                                    <td>Tổng cộng:</td>
                                                     <td>
-                                                        <fmt:formatNumber type="number"
+                                                        <span class="fw-bold">
+                                                            Thành tiền:
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <span class="fw-bold">
+                                                            <fmt:formatNumber type="number"
                                                                 value="${totalPrices}" />
                                                             đ
+                                                        </span>
                                                     </td>
                                                 </tr>
                                         </tbody>
                                     </table>
                                 </div>
-                                <a href="/admin/order" class="btn btn-success mt-3">Back</a>
+                                <a href="/admin/order" class="btn btn-success mt-3">Quay về</a>
 
                             </div>
 

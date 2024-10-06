@@ -41,18 +41,18 @@
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">
-                    <h1 class="mt-4">Manage Products</h1>
+                    <h1 class="mt-4">Quản lý sản phẩm</h1>
                     <ol class="breadcrumb mb-4">
                         <li class="breadcrumb-item">
-                            <a href="/admin">Dashboard</a>
+                            <a href="/admin">Bảng điều khiển</a>
                         </li>
                         <li class="breadcrumb-item active">
-                            Products
+                            Sản phẩm
                         </li>
                     </ol>
                     <div class="mt-5 row">
                       <div class="col-md-6 col-12 mx-auto">
-                        <h3>Update a Product</h3>
+                        <h3>Cập nhật sản phẩm</h3>
                         <hr>
                         <form:form action="/admin/product/update" 
                               method="post" 
@@ -65,7 +65,7 @@
                               <c:set var="errorName">
                                 <form:errors path="name" cssClass="invalid-feedback"/>
                               </c:set>
-                              <label for="name" class="form-label">Name:</label>
+                              <label for="name" class="form-label">Tên sản phẩm:</label>
                               <form:input path="name" type="text" class="form-control ${not empty errorName ? 'is-invalid' : ''}"/>
                               ${errorName}
                             </div>
@@ -73,7 +73,7 @@
                               <c:set var="errorPrice">
                                 <form:errors path="price" cssClass="invalid-feedback"/>
                               </c:set>
-                              <label for="price" class="form-label">Price:</label>
+                              <label for="price" class="form-label">Giá:</label>
                               <form:input path="price" type="number" class="form-control ${not empty errorPrice ? 'is-invalid' : ''}"/>
                               ${errorPrice}
                             </div>
@@ -81,7 +81,7 @@
                               <c:set var="errorDetailDesc">
                                 <form:errors path="detailDesc" cssClass="invalid-feedback"/>
                               </c:set>
-                              <label for="detailDesc" class="form-label">Detail description:</label>
+                              <label for="detailDesc" class="form-label">Mô tả chi tiết:</label>
                               <form:textarea path="detailDesc" class="form-control ${not empty errorDetailDesc ? 'is-invalid' : ''}"></form:textarea>
                               ${errorDetailDesc}
                             </div>
@@ -89,7 +89,7 @@
                               <c:set var="errorShortDesc">
                                 <form:errors path="shortDesc" cssClass="invalid-feedback"/>
                               </c:set>
-                              <label for="shortDesc" class="form-label">Short description:</label>
+                              <label for="shortDesc" class="form-label">Mô tả ngắn:</label>
                               <form:input path="shortDesc" type="text" class="form-control ${not empty errorShortDesc ? 'is-invalid' : ''}"/>
                               ${errorShortDesc}
                             </div>
@@ -97,12 +97,12 @@
                               <c:set var="errorQuantity">
                                 <form:errors path="quantity" cssClass="invalid-feedback"/>
                               </c:set>
-                              <label for="quantity" class="form-label">Quantity:</label>
+                              <label for="quantity" class="form-label">Số lượng:</label>
                               <form:input path="quantity" type="number" class="form-control ${not empty errorQuantity ? 'is-invalid' : ''}"/>
                               ${errorQuantity}
                             </div>
                             <div class="col-md-6">
-                              <label for="factory" class="form-label">Factory:</label>
+                              <label for="factory" class="form-label">Hãng sản xuất:</label>
                               <form:select class="form-select" path="factory">
                                 <form:option value="APPLE">Apple (MacBook)</form:option>
                                 <form:option value="ASUS">Asus</form:option>
@@ -113,7 +113,7 @@
                               </form:select>
                             </div>
                             <div class="col-md-6">
-                                <label for="target" class="form-label">Target:</label>
+                                <label for="target" class="form-label">Mục đích sử dụng:</label>
                                 <form:select class="form-select" path="target">
                                   <form:option value="GAMING">Gaming</form:option>
                                   <form:option value="SINHVIEN-VANPHONG">Sinh viên - Văn phòng</form:option>
@@ -123,7 +123,7 @@
                                 </form:select>
                               </div>
                             <div class="col-12">
-                              <label for="productImage" class="form-label">Image:</label>
+                              <label for="productImage" class="form-label">Hình ảnh:</label>
                               <form:input path="" type="file" class="form-control" id="productImage"
                                           accept=".png, .jpg, .jpeg" name="productFile"/>
                               <form:input path="image" type="hidden" />
@@ -132,9 +132,9 @@
                               <img alt="Product Preview" id="productPreview" 
                                   style="max-height: 250px; display: none;" class="mx-auto"/>
                             </div>
-                            <div class="col-md-3">
-                              <button type="submit" class="btn btn-primary">Update</button>
-                              <a href="/admin/product" class="btn btn-secondary">Back</a>
+                            <div class="col-md-4">
+                              <button type="submit" class="btn btn-primary">Cập nhật</button>
+                              <a href="/admin/product" class="btn btn-secondary">Quay về</a>
                             </div>
                         </form:form>
                       </div>

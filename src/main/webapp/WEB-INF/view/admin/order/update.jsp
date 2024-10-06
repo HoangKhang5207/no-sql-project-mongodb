@@ -12,9 +12,9 @@
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
-    <meta name="description" content="Hỏi Dân IT - Dự án laptopshop" />
-    <meta name="author" content="Hỏi Dân IT" />
-    <title>Update Order - Hỏi Dân IT</title>
+    <meta name="description" content="Hoang Khang - Dự án laptopshop" />
+    <meta name="author" content="Hoang Khang" />
+    <title>Update Order - Hoang Khang</title>
     <link href="/css/styles.css" rel="stylesheet" />
 
     <script
@@ -31,16 +31,16 @@
       <div id="layoutSidenav_content">
         <main>
           <div class="container-fluid px-4">
-            <h1 class="mt-4">Orders</h1>
+            <h1 class="mt-4">Quản lý đơn hàng</h1>
             <ol class="breadcrumb mb-4">
-              <li class="breadcrumb-item"><a href="/admin">Dashboard</a></li>
-              <li class="breadcrumb-item"><a href="/admin/order">Order</a></li>
-              <li class="breadcrumb-item active">Update</li>
+              <li class="breadcrumb-item"><a href="/admin">Bảng điều khiển</a></li>
+              <li class="breadcrumb-item"><a href="/admin/order">Đơn hàng</a></li>
+              <li class="breadcrumb-item active">Cập nhật</li>
             </ol>
             <div class="mt-5">
               <div class="row">
                 <div class="col-md-6 col-12 mx-auto">
-                  <h3>Update a order</h3>
+                  <h3>Cập nhật đơn hàng</h3>
                   <hr />
                   <form:form
                     method="post"
@@ -53,10 +53,10 @@
                       <form:input type="text" class="form-control" path="id" />
                     </div>
                     <div class="mb-3">
-                      <label>Order id = ${newOrder.id} </label>
+                      <label>Mã đơn hàng: ${newOrder.id} </label>
                       &nbsp; &nbsp; &nbsp; &nbsp;
                       <label class="form-label"
-                        >Price:
+                        >Giá:
                         <fmt:formatNumber
                           type="number"
                           value="${newOrder.totalPrice}"
@@ -66,22 +66,21 @@
                     </div>
 
                     <div class="mb-3 col-12 col-md-6">
-                      <label class="form-label">User:</label>
+                      <label class="form-label">Người nhận:</label>
                       <p>${newOrder.receiverName}</p>
                     </div>
 
                     <div class="mb-3 col-12 col-md-6">
-                      <label class="form-label">Status:</label>
+                      <label class="form-label">Trạng thái:</label>
                       <form:select class="form-select" path="status">
-                        <form:option value="PENDING">PENDING</form:option>
-                        <form:option value="SHIPPING">SHIPPING</form:option>
-                        <form:option value="COMPLETE">COMPLETE</form:option>
-                        <form:option value="CANCEL">CANCEL</form:option>
+                        <form:option value="PENDING">Đang chờ xử lý</form:option>
+                        <form:option value="SHIPPING">Đang vận chuyển</form:option>
+                        <form:option value="COMPLETE">Giao hàng thành công</form:option>
                       </form:select>
                     </div>
                     <div class="col-12 mb-5">
                       <button type="submit" class="btn btn-warning">
-                        Update
+                        Cập nhật
                       </button>
                     </div>
                   </form:form>

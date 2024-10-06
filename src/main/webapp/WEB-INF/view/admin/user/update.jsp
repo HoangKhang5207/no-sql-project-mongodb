@@ -35,18 +35,18 @@
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">
-                    <h1 class="mt-4">Manage Users</h1>
+                    <h1 class="mt-4">Quản lý người dùng</h1>
                     <ol class="breadcrumb mb-4">
                         <li class="breadcrumb-item">
-                            <a href="/admin">Dashboard</a>
+                            <a href="/admin">Bảng điều khiển</a>
                         </li>
                         <li class="breadcrumb-item active">
-                            Users
+                            Người dùng
                         </li>
                     </ol>
                     <div class="row mt-5">
                         <div class="col-md-6 col-12 mx-auto">
-                            <h3>Update User with Id = ${updateUser.id}</h3>
+                            <h3>Chỉnh sửa thông tin người dùng với mã: ${updateUser.id}</h3>
                             <hr>
                             <form:form action="/admin/user/update" method="post" 
                                     modelAttribute="updateUser"
@@ -59,19 +59,19 @@
                                     <form:input path="email" type="email" disabled="true" class="form-control"/>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="phone" class="form-label">Phone number:</label>
+                                    <label for="phone" class="form-label">Số điện thoại:</label>
                                     <form:input path="phone" type="text" class="form-control"/>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="fullName" class="form-label">Full Name:</label>
+                                    <label for="fullName" class="form-label">Họ và tên:</label>
                                     <form:input path="fullName" type="text" class="form-control"/>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="address" class="form-label">Address:</label>
+                                    <label for="address" class="form-label">Địa chỉ:</label>
                                     <form:input path="address" type="text" class="form-control"/>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="avatar" class="form-label">Avatar:</label>
+                                    <label for="avatar" class="form-label">Ảnh đại diện:</label>
                                     <form:input id="avatar" name="khangFile" path="" 
                                                 accept=".png, .jpg, .jpeg" type="file" class="form-control"/>
                                     <form:input path="avatar" type="hidden"/>
@@ -82,8 +82,8 @@
                                         style="max-height: 250px; display: block;" 
                                         class="mx-auto"/> 
                                 </div>
-                                <button type="submit" class="btn btn-warning">Update</button>
-                                <a href="/admin/user" class="btn btn-secondary">Back</a>
+                                <button type="submit" class="btn btn-warning">Cập nhật</button>
+                                <a href="/admin/user" class="btn btn-secondary">Quay về</a>
                             </form:form>
                         </div>
                     </div>

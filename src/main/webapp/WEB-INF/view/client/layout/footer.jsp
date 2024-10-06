@@ -22,21 +22,21 @@
                     </div>
                     <div class="col-lg-3 col-md-6">
                         <div class="d-flex flex-column text-start footer-item">
-                            <h4 class="text-light mb-3">Shop Info</h4>
-                            <a class="btn-link" href="#">About Us</a>
+                            <h4 class="text-light mb-3">Thông tin shop</h4>
+                            <a class="btn-link" href="#">Về chúng tôi</a>
 
                         </div>
                     </div>
                     <div class="col-lg-3 col-md-6">
                         <div class="d-flex flex-column text-start footer-item">
-                            <h4 class="text-light mb-3">Account</h4>
-                            <a class="btn-link" href="#">My Account</a>
+                            <h4 class="text-light mb-3">Tài khoản</h4>
+                            <a class="btn-link" href="#">Tài khoản của tôi</a>
                         </div>
                     </div>
                     <div class="col-lg-3 col-md-6">
                         <div class="footer-item">
-                            <h4 class="text-light mb-3">Contact</h4>
-                            <p>Author:Hoang Khang</p>
+                            <h4 class="text-light mb-3">Liên hệ</h4>
+                            <p>Tác giả: Hoang Khang</p>
                             <p>GitHub: <a href="https://github.com/HoangKhang5207" target="_blank"> HoangKhang5207 </a></p>
                         </div>
                     </div>
@@ -51,15 +51,14 @@
                 <div class="row">
                     <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
                         <span class="text-light"><a href="https://github.com/HoangKhang5207" target="_blank"><i
-                                    class="fas fa-copyright text-light me-2"></i>HoangKhang5207</a>, All right
-                            reserved.</span>
+                                    class="fas fa-copyright text-light me-2"></i>HoangKhang5207</a></span>
                     </div>
                     <div class="col-md-6 my-auto text-center text-md-end text-white">
                         <!--/*** This template is free as long as you keep the below author’s credit link/attribution link/backlink. ***/-->
                         <!--/*** If you'd like to use the template without the below author’s credit link/attribution link/backlink, ***/-->
                         <!--/*** you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". ***/-->
-                        Designed By <a class="border-bottom" href="https://htmlcodex.com">HTML Codex</a> Distributed
-                        By <a class="border-bottom" href="https://themewagon.com">ThemeWagon</a>
+                        Được thiết kế bởi <a class="border-bottom" href="https://htmlcodex.com">HTML Codex</a> Được phân phối bởi 
+                        <a class="border-bottom" href="https://themewagon.com">ThemeWagon</a>
                     </div>
                 </div>
             </div>

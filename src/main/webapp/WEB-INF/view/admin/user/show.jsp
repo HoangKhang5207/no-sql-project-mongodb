@@ -11,8 +11,8 @@ uri="http://www.springframework.org/tags/form" prefix="form"%>
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
-    <meta name="description" content="Hỏi Dân IT - Dự án laptopshop" />
-    <meta name="author" content="Hỏi Dân IT" />
+    <meta name="description" content="Hoang Khang - Dự án laptopshop" />
+    <meta name="author" content="Hoang Khang" />
     <title>Dashboard - Users</title>
     <link href="/css/styles.css" rel="stylesheet" />
     <script
@@ -28,19 +28,19 @@ uri="http://www.springframework.org/tags/form" prefix="form"%>
       <div id="layoutSidenav_content">
         <main>
           <div class="container-fluid px-4">
-            <h1 class="mt-4">Manage Users</h1>
+            <h1 class="mt-4">Quản lý người dùng</h1>
             <ol class="breadcrumb mb-4">
               <li class="breadcrumb-item">
-                <a href="/admin">Dashboard</a>
+                <a href="/admin">Bảng điều khiển</a>
               </li>
-              <li class="breadcrumb-item active">Users</li>
+              <li class="breadcrumb-item active">Người dùng</li>
             </ol>
             <div class="row mt-5">
               <div class="col-12 mx-auto">
                 <div class="d-flex justify-content-between">
-                  <h3>Table Users</h3>
+                  <h3>Danh sách người dùng</h3>
                   <a href="/admin/user/create" class="btn btn-primary"
-                    >Create a user</a
+                    >Tạo mới một người dùng</a
                   >
                 </div>
                 <hr />
@@ -48,9 +48,9 @@ uri="http://www.springframework.org/tags/form" prefix="form"%>
                   <thead>
                     <th>ID</th>
                     <th>Email</th>
-                    <th>Full Name</th>
-                    <th>Role</th>
-                    <th>Action</th>
+                    <th>Họ và tên</th>
+                    <th>Vai trò</th>
+                    <th>Hành động</th>
                   </thead>
                   <tbody>
                     <c:forEach var="user" items="${users}">
@@ -58,22 +58,29 @@ uri="http://www.springframework.org/tags/form" prefix="form"%>
                         <td>${user.id}</td>
                         <td>${user.email}</td>
                         <td>${user.fullName}</td>
-                        <td>${user.role.name}</td>
+                        <td>
+                          <c:if test="${user.role.name.equals('ADMIN')}">
+                            Quản trị viên
+                          </c:if>
+                          <c:if test="${user.role.name.equals('USER')}">
+                            Khách hàng
+                          </c:if>
+                        </td>
                         <td>
                           <a
                             href="/admin/user/${user.id}"
                             class="btn btn-success"
-                            >View</a
+                            >Xem chi tiết</a
                           >
                           <a
                             href="/admin/user/update/${user.id}"
                             class="btn btn-warning"
-                            >Update</a
+                            >Cập nhật</a
                           >
                           <a
                             href="/admin/user/delete/${user.id}"
                             class="btn btn-danger"
-                            >Delete</a
+                            >Xóa</a
                           >
                         </td>
                       </tr>

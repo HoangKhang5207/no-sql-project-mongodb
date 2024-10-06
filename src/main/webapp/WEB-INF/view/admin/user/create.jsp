@@ -34,18 +34,18 @@
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">
-                    <h1 class="mt-4">Manage Users</h1>
+                    <h1 class="mt-4">Quản lý người dùng</h1>
                     <ol class="breadcrumb mb-4">
                         <li class="breadcrumb-item">
-                            <a href="/admin">Dashboard</a>
+                            <a href="/admin">Bảng điều khiển</a>
                         </li>
                         <li class="breadcrumb-item active">
-                            Users
+                            Người dùng
                         </li>
                     </ol>
                     <div class="mt-5 row">
                       <div class="col-md-6 col-12 mx-auto">
-                        <h3>Create a User</h3>
+                        <h3>Tạo một người dùng</h3>
                         <hr>
                         <form:form action="/admin/user/create" 
                               method="post" 
@@ -69,30 +69,30 @@
                               ${errorPassword}
                             </div>
                             <div class="col-md-6">
-                              <label for="phone" class="form-label">Phone number:</label>
+                              <label for="phone" class="form-label">Số điện thoại:</label>
                               <form:input path="phone" type="text" class="form-control"/>
                             </div>
                             <div class="col-md-6">
                               <c:set var="errorFullName">
                                 <form:errors path="fullName" cssClass="invalid-feedback" />
                               </c:set>
-                              <label for="fullName" class="form-label">Full Name:</label>
+                              <label for="fullName" class="form-label">Họ và tên:</label>
                               <form:input path="fullName" type="text" class="form-control ${not empty errorFullName ? 'is-invalid' : ''}"/>
                               ${errorFullName}
                             </div>
                             <div class="col-12">
-                              <label for="address" class="form-label">Address:</label>
+                              <label for="address" class="form-label">Địa chỉ:</label>
                               <form:input path="address" type="text" class="form-control"/>
                             </div>
                             <div class="col-md-6">
-                              <label for="role" class="form-label">Role:</label>
+                              <label for="role" class="form-label">Vai trò:</label>
                               <form:select id="role" class="form-select" path="role.name">
-                                <form:option value="ADMIN">ADMIN</form:option>
-                                <form:option value="USER">USER</form:option>
+                                <form:option value="ADMIN">Quản trị viên</form:option>
+                                <form:option value="USER">Khách hàng</form:option>
                               </form:select>
                             </div>
                             <div class="col-md-6">
-                              <label for="avatarFile" class="form-label">Avatar:</label>
+                              <label for="avatarFile" class="form-label">Ảnh đại diện:</label>
                               <form:input path="" type="file" class="form-control" id="avatarFile"
                                           accept=".png, .jpg, .jpeg" name="khangFile"/>
                             </div>
@@ -100,9 +100,9 @@
                               <img alt="Avatar Preview" id="avatarPreview" 
                                   style="max-height: 250px; display: none;" class="mx-auto"/>
                             </div>
-                            <div class="col-md-3">
-                              <button type="submit" class="btn btn-primary">Create</button>
-                              <a href="/admin/user" class="btn btn-secondary">Back</a>
+                            <div class="col-md-4">
+                              <button type="submit" class="btn btn-primary">Tạo mới</button>
+                              <a href="/admin/user" class="btn btn-secondary">Quay về</a>
                             </div>
                         </form:form>
                       </div>

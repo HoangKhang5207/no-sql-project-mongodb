@@ -11,9 +11,9 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
-    <meta name="description" content="Hỏi Dân IT - Dự án laptopshop" />
-    <meta name="author" content="Hỏi Dân IT" />
-    <title>Manager Orders - Hỏi Dân IT</title>
+    <meta name="description" content="Hoang Khang - Dự án laptopshop" />
+    <meta name="author" content="Hoang Khang" />
+    <title>Manager Orders - Hoang Khang</title>
     <link href="/css/styles.css" rel="stylesheet" />
     <script
       src="https://use.fontawesome.com/releases/v6.3.0/js/all.js"
@@ -28,16 +28,16 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
       <div id="layoutSidenav_content">
         <main>
           <div class="container-fluid px-4">
-            <h1 class="mt-4">Manage Orders</h1>
+            <h1 class="mt-4">Quản lý đơn hàng</h1>
             <ol class="breadcrumb mb-4">
-              <li class="breadcrumb-item"><a href="/admin">Dashboard</a></li>
-              <li class="breadcrumb-item active">Order</li>
+              <li class="breadcrumb-item"><a href="/admin">Bảng điều khiển</a></li>
+              <li class="breadcrumb-item active">Đơn hàng</li>
             </ol>
             <div class="mt-5">
               <div class="row">
                 <div class="col-12 mx-auto">
                   <div class="d-flex">
-                    <h3>Table Orders</h3>
+                    <h3>Danh sách đơn hàng</h3>
                   </div>
 
                   <hr />
@@ -45,16 +45,16 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
                     <thead>
                       <tr>
                         <th>ID</th>
-                        <th>Total Price</th>
-                        <th>User</th>
-                        <th>Status</th>
-                        <th>Action</th>
+                        <th>Tổng tiền</th>
+                        <th>Người nhận</th>
+                        <th>Trạng thái</th>
+                        <th>Hành động</th>
                       </tr>
                     </thead>
                     <tbody>
                       <c:forEach var="order" items="${orders}">
                         <tr>
-                          <th>${order.id}</th>
+                          <td>${order.id}</td>
                           <td>
                             <fmt:formatNumber
                               type="number"
@@ -63,17 +63,27 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
                             đ
                           </td>
                           <td>${order.receiverName}</td>
-                          <td>${order.status}</td>
+                          <td>
+                            <c:if test="${order.status.equals('PENDING')}">
+                              <span class="text-warning fw-bold">Đang chờ xử lý</span>
+                            </c:if>
+                            <c:if test="${order.status.equals('SHIPPING')}">
+                              <span class="text-info fw-bold">Đang vận chuyển</span>
+                            </c:if>
+                            <c:if test="${order.status.equals('COMPLETE')}">
+                              <span class="text-success fw-bold">Giao hàng thành công</span>
+                            </c:if>
+                          </td>
                           <td>
                             <a
                               href="/admin/order/${order.id}"
                               class="btn btn-success"
-                              >View</a
+                              >Xem chi tiết</a
                             >
                             <a
                               href="/admin/order/update/${order.id}"
                               class="btn btn-warning mx-2"
-                              >Update</a
+                              >Cập nhật trạng thái</a
                             >
                           </td>
                         </tr>

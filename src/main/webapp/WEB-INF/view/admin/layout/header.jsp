@@ -10,7 +10,7 @@
     <!-- Navbar Search-->
     <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
         <span style="color: white;">
-            Welcome, 
+            Chào mừng, 
             <c:out value="${pageContext.request.userPrincipal.name}" />
         </span>
         <!-- <div class="input-group">
@@ -26,7 +26,7 @@
             <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
                 aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="#!">Settings</a></li>
+                <li><a class="dropdown-item" href="#!">Cài đặt</a></li>
 
                 <li>
                     <hr class="dropdown-divider" />
@@ -35,7 +35,7 @@
                     <form action="/logout" method="post">
                         <input type="hidden" name="${_csrf.parameterName}"
                                 value="${_csrf.token}" />
-                        <input type="submit" value="Logout" class="dropdown-item"/>
+                        <input type="submit" value="Đăng xuất" class="dropdown-item"/>
                     </form>
                 </li>
             </ul>

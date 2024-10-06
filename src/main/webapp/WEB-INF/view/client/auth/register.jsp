@@ -21,7 +21,7 @@
                         <div class="row justify-content-center">
                             <div class="col-lg-7">
                                 <div class="card shadow-lg border-0 rounded-lg mt-5">
-                                    <div class="card-header"><h3 class="text-center font-weight-light my-4">Create Account</h3></div>
+                                    <div class="card-header"><h3 class="text-center font-weight-light my-4">Tạo tài khoản</h3></div>
                                     <div class="card-body">
                                         <form:form method="post" action="/register" modelAttribute="registerUser">
                                             <div class="row mb-3">
@@ -38,21 +38,21 @@
                                                     <div class="form-floating mb-3 mb-md-0">
                                                         <form:input path="firstName" class="form-control ${not empty errorFirstName ? 'is-invalid' : ''}" 
                                                                     type="text" placeholder="Enter your first name" />
-                                                        <label for="firstName">First name</label>
+                                                        <label for="firstName">Tên</label>
                                                         ${errorFirstName}
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-floating">
                                                         <form:input path="lastName" class="form-control" type="text" placeholder="Enter your last name" />
-                                                        <label for="lastName">Last name</label>
+                                                        <label for="lastName">Họ</label>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="form-floating mb-3">
                                                 <form:input path="email" class="form-control ${not empty errorEmail ? 'is-invalid' : ''}" 
                                                             type="email" placeholder="name@example.com" />
-                                                <label for="email">Email address</label>
+                                                <label for="email">Địa chỉ email</label>
                                                 ${errorEmail}
                                             </div>
                                             <div class="row mb-3">
@@ -60,26 +60,26 @@
                                                     <div class="form-floating mb-3 mb-md-0">
                                                         <form:input path="password" class="form-control ${not empty errorPassword ? 'is-invalid' : ''}" 
                                                                     type="password" placeholder="Create a password" />
-                                                        <label for="password">Password</label>
+                                                        <label for="password">Mật khẩu</label>
                                                         ${errorPassword}
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-floating mb-3 mb-md-0">
                                                         <form:input path="confirmPassword" class="form-control" type="password" placeholder="Confirm password" />
-                                                        <label for="confirmPassword">Confirm Password</label>
+                                                        <label for="confirmPassword">Xác nhận mật khẩu</label>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="mt-4 mb-0">
                                                 <div class="d-grid">
-                                                    <input type="submit" class="btn btn-primary btn-block" value="Create Account"></input>
+                                                    <input type="submit" class="btn btn-primary btn-block" value="Tạo tài khoản"></input>
                                                 </div>
                                             </div>
                                         </form:form>
                                     </div>
                                     <div class="card-footer text-center py-3">
-                                        <div class="small"><a href="/login">Have an account? Go to login</a></div>
+                                        <div class="small"><a href="/login">Bạn đã có tài khoản? Đăng nhập ngay!</a></div>
                                     </div>
                                 </div>
                             </div>

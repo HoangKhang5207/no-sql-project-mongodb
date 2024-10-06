@@ -11,8 +11,8 @@ uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
-    <meta name="description" content="Hỏi Dân IT - Dự án laptopshop" />
-    <meta name="author" content="Hỏi Dân IT" />
+    <meta name="description" content="Hoang Khang - Dự án laptopshop" />
+    <meta name="author" content="Hoang Khang" />
     <title>Dashboard - Product</title>
     <link href="/css/styles.css" rel="stylesheet" />
     <script
@@ -28,33 +28,33 @@ uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
       <div id="layoutSidenav_content">
         <main>
           <div class="container-fluid px-4">
-            <h1 class="mt-4">Manage Products</h1>
+            <h1 class="mt-4">Quản lý sản phẩm</h1>
             <ol class="breadcrumb mb-4">
               <li class="breadcrumb-item">
-                <a href="/admin">Dashboard</a>
+                <a href="/admin">Bảng điều khiển</a>
               </li>
-              <li class="breadcrumb-item active">Products</li>
+              <li class="breadcrumb-item active">Sản phẩm</li>
             </ol>
             <div class="row mt-5">
               <div class="col-12 mx-auto">
                 <div class="d-flex justify-content-between">
-                  <h3>Table Products</h3>
+                  <h3>Danh sách sản phẩm</h3>
                   <a href="/admin/product/create" class="btn btn-primary"
-                    >Create a product</a
+                    >Tạo mới một sản phẩm</a
                   >
                 </div>
                 <hr />
                 <c:if test="${products.size() == 0}">
-                  <h2 class="alert alert-info text-center">No products found.</h2>
+                  <h2 class="alert alert-info text-center">Không có sản phẩm nào. Vui lòng thêm mới</h2>
                 </c:if>
                 <c:if test="${products.size() > 0}">
                   <table class="table table-bordered table-hover">
                     <thead>
                       <th>ID</th>
-                      <th>Name</th>
-                      <th>Price</th>
-                      <th>Factory</th>
-                      <th>Action</th>
+                      <th>Tên sản phẩm</th>
+                      <th>Giá</th>
+                      <th>Hãng sản xuất</th>
+                      <th>Hành động</th>
                     </thead>
                     <tbody>
                       <c:forEach var="product" items="${products}">
@@ -73,17 +73,17 @@ uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
                             <a
                               href="/admin/product/${product.id}"
                               class="btn btn-success"
-                              >View</a
+                              >Xem chi tiết</a
                             >
                             <a
                               href="/admin/product/update/${product.id}"
                               class="btn btn-warning"
-                              >Update</a
+                              >Cập nhật</a
                             >
                             <a
                               href="/admin/product/delete/${product.id}"
                               class="btn btn-danger"
-                              >Delete</a
+                              >Xóa</a
                             >
                           </td>
                         </tr>

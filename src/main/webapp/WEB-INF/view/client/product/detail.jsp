@@ -81,18 +81,18 @@
                         </div>
                         <div class="col-lg-6">
                             <h4 class="fw-bold mb-3"> ${product.name}</h4>
-                            <p class="mb-3">${product.factory}</p>
+                            <p class="mb-3">Hãng sản xuất: ${product.factory}</p>
                             <h5 class="fw-bold mb-3">
                                 <fmt:formatNumber type="number" value="${product.price}" /> đ
 
                             </h5>
-                            <div class="d-flex mb-4">
+                            <!-- <div class="d-flex mb-4">
                                 <i class="fa fa-star text-secondary"></i>
                                 <i class="fa fa-star text-secondary"></i>
                                 <i class="fa fa-star text-secondary"></i>
                                 <i class="fa fa-star text-secondary"></i>
                                 <i class="fa fa-star"></i>
-                            </div>
+                            </div> -->
                             <p class="mb-4">
                                 ${product.shortDesc}
                             </p>
@@ -123,7 +123,7 @@
                             <button data-product-id="${product.id}"
                                 class="btnAddToCartDetail btn border border-secondary rounded-pill px-4 py-2 mb-4 text-primary"><i
                                     class="fa fa-shopping-bag me-2 text-primary"></i>
-                                Add to cart
+                                Thêm vào giỏ hàng
                             </button>
                             <!-- </form> -->
 
@@ -134,7 +134,7 @@
                                     <button class="nav-link active border-white border-bottom-0"
                                         type="button" role="tab" id="nav-about-tab" data-bs-toggle="tab"
                                         data-bs-target="#nav-about" aria-controls="nav-about"
-                                        aria-selected="true">Description</button>
+                                        aria-selected="true">Mô tả sản phẩm</button>
                                 </div>
                             </nav>
                             <div class="tab-content mb-5">
@@ -156,7 +156,7 @@
                         <div class="col-lg-12">
 
                             <div class="mb-4">
-                                <h4>Categories</h4>
+                                <h4>Laptop theo hãng</h4>
                                 <ul class="list-unstyled fruite-categorie">
                                     <li>
                                         <div class="d-flex justify-content-between fruite-name">
