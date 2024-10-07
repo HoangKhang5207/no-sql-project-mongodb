@@ -5,14 +5,18 @@ import java.time.LocalDateTime;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import jakarta.validation.constraints.Min;
+
 @Document(collection = "reviews")
 public class ReviewMongo {
 
     @Id
     private String id;
     private UserMongo user;
+
+    @Min(value = 1, message = "trường này là bắt buộc")
     private int rating;
-    private String review;
+    private String content;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -20,12 +24,12 @@ public class ReviewMongo {
 
     }
 
-    public ReviewMongo(String id, UserMongo user, int rating, String review, LocalDateTime createdAt,
+    public ReviewMongo(String id, UserMongo user, int rating, String content, LocalDateTime createdAt,
             LocalDateTime updatedAt) {
         this.id = id;
         this.user = user;
         this.rating = rating;
-        this.review = review;
+        this.content = content;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -54,12 +58,12 @@ public class ReviewMongo {
         this.rating = rating;
     }
 
-    public String getReview() {
-        return review;
+    public String getContent() {
+        return content;
     }
 
-    public void setReview(String review) {
-        this.review = review;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public LocalDateTime getCreatedAt() {

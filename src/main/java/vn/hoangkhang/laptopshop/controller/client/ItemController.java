@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import vn.hoangkhang.laptopshop.domain.dto.ProductCriteriaDTO;
 import vn.hoangkhang.laptopshop.service.ProductMongoService;
 import vn.hoangkhang.laptopshop.service.UserMongoService;
@@ -24,6 +26,7 @@ import vn.hoangkhang.laptopshop.domain.CartDetailMongo;
 import vn.hoangkhang.laptopshop.domain.CartMongo;
 // import vn.hoangkhang.laptopshop.domain.Product;
 import vn.hoangkhang.laptopshop.domain.ProductMongo;
+import vn.hoangkhang.laptopshop.domain.ReviewMongo;
 // import vn.hoangkhang.laptopshop.domain.Product_;
 import vn.hoangkhang.laptopshop.domain.UserMongo;
 
@@ -149,6 +152,34 @@ public class ItemController {
         String email = (String) session.getAttribute("email");
         this.productMongoService.handleAddProductToCart(id, email, session, quantity);
         return "redirect:/product/" + id;
+    }
+
+    @GetMapping("/review-product/{id}")
+    public String getReviewPage(Model model, @PathVariable String id) {
+        ProductMongo product = this.productMongoService.getProductById(id);
+        model.addAttribute("product", product);
+        model.addAttribute("newReview", new ReviewMongo());
+        return "client/product/review";
+    }
+
+    @PostMapping("/add-review-product")
+    public String handleAddReview(Model model,
+            @Valid @ModelAttribute("newReview") ReviewMongo newReview,
+            BindingResult bindingResult,
+            @RequestParam("productId") String id,
+            HttpServletRequest request) {
+
+        if (bindingResult.hasErrors()) {
+            ProductMongo product = this.productMongoService.getProductById(id);
+            model.addAttribute("product", product);
+            return "client/product/review";
+        }
+
+        HttpSession session = request.getSession(false);
+
+        this.productMongoService.handleAddProductReview(newReview, id, session);
+
+        return "redirect:/order-history";
     }
 
     // @GetMapping("/products")

@@ -151,7 +151,7 @@
                                     <td>
                                         <p class="mb-0 mt-4">
                                             <c:if test="${order.status.equals('COMPLETE')}">
-                                                <a href="/review/${orderDetail.product.id}" 
+                                                <a href="/review-product/${orderDetail.product.id}" 
                                                     class="alert alert-warning">Đánh giá sản phẩm</a>
                                             </c:if>
                                         </p>

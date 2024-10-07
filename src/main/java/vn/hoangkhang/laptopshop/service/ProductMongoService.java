@@ -1,5 +1,6 @@
 package vn.hoangkhang.laptopshop.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +21,7 @@ import vn.hoangkhang.laptopshop.domain.CartMongo;
 import vn.hoangkhang.laptopshop.domain.OrderDetailMongo;
 import vn.hoangkhang.laptopshop.domain.OrderMongo;
 import vn.hoangkhang.laptopshop.domain.ProductMongo;
+import vn.hoangkhang.laptopshop.domain.ReviewMongo;
 import vn.hoangkhang.laptopshop.domain.UserMongo;
 import vn.hoangkhang.laptopshop.repository.ProductMongoRepository;
 import vn.hoangkhang.laptopshop.repository.UserMongoRepository;
@@ -246,6 +248,34 @@ public class ProductMongoService {
             }
 
             this.userMongoRepository.save(user);
+        }
+    }
+
+    public void handleAddProductReview(ReviewMongo reviewRequest, String productId, HttpSession session) {
+        String email = (String) session.getAttribute("email");
+        UserMongo userMongo = this.userMongoService.getUserByEmail(email);
+        Optional<ProductMongo> productMongo = this.productMongoRepository.findById(productId);
+
+        if (productMongo.isPresent() && userMongo != null) {
+            ProductMongo product = productMongo.get();
+
+            ReviewMongo review = new ReviewMongo();
+            review.setId(UUID.randomUUID().toString());
+            review.setRating(reviewRequest.getRating());
+            review.setContent(reviewRequest.getContent());
+            review.setCreatedAt(LocalDateTime.now());
+            review.setUpdatedAt(LocalDateTime.now());
+
+            UserMongo user = new UserMongo();
+            user.setId(userMongo.getId());
+            user.setFullName(userMongo.getFullName());
+            user.setEmail(userMongo.getEmail());
+
+            review.setUser(user);
+
+            product.getReviews().add(review);
+
+            this.productMongoRepository.save(product);
         }
     }
 }
