@@ -71,6 +71,7 @@ public class HomePageController {
         user.setPassword(hashPassword);
 
         user.setRole(new RoleMongo(RoleUtil.USER.getId(), "USER", RoleUtil.USER.getDescription()));
+        user.setAvatar("default-avatar.jpg");
 
         user.setCart(null);
         user.setOrders(new ArrayList<OrderMongo>());

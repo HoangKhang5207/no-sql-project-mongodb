@@ -2,6 +2,7 @@ package vn.hoangkhang.laptopshop.controller.client;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -43,9 +44,44 @@ public class ItemController {
     }
 
     @GetMapping("/product/{productId}")
-    public String getProductDetail(Model model, @PathVariable String productId) {
+    public String getProductDetail(Model model, @PathVariable String productId,
+            @RequestParam("page") Optional<String> pageOptional) {
+        int page = 1;
+        try {
+            if (pageOptional.isPresent()) {
+                // convert from String to int
+                page = Integer.parseInt(pageOptional.get());
+            } else {
+                // page = 1
+            }
+        } catch (Exception e) {
+            // page = 1
+        }
+
         ProductMongo product = this.productMongoService.getProductById(productId);
+
+        int size = 10;
+        int skip = (page - 1) * size;
+        int totalPages = (int) Math.ceil((double) product.getReviews().size() / size);
+
+        long ratingOneStar = product.getReviews().stream().filter(rv -> rv.getRating() == 1).count();
+        long ratingTwoStar = product.getReviews().stream().filter(rv -> rv.getRating() == 2).count();
+        long ratingThreeStar = product.getReviews().stream().filter(rv -> rv.getRating() == 3).count();
+        long ratingFourStar = product.getReviews().stream().filter(rv -> rv.getRating() == 4).count();
+        long ratingFiveStar = product.getReviews().stream().filter(rv -> rv.getRating() == 5).count();
+
+        product.getReviews().sort((p1, p2) -> p2.getCreatedAt().compareTo(p1.getCreatedAt()));
+
         model.addAttribute("product", product);
+        model.addAttribute("reviews", product.getReviews().stream().skip(skip).limit(size).toList());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+
+        model.addAttribute("cntOneStar", ratingOneStar);
+        model.addAttribute("cntTwoStar", ratingTwoStar);
+        model.addAttribute("cntThreeStar", ratingThreeStar);
+        model.addAttribute("cntFourStar", ratingFourStar);
+        model.addAttribute("cntFiveStar", ratingFiveStar);
         return "client/product/detail";
     }
 
@@ -155,9 +191,11 @@ public class ItemController {
     }
 
     @GetMapping("/review-product/{id}")
-    public String getReviewPage(Model model, @PathVariable String id) {
+    public String getReviewPage(Model model, @PathVariable String id,
+            @RequestParam("orderId") String orderId) {
         ProductMongo product = this.productMongoService.getProductById(id);
         model.addAttribute("product", product);
+        model.addAttribute("orderId", orderId);
         model.addAttribute("newReview", new ReviewMongo());
         return "client/product/review";
     }

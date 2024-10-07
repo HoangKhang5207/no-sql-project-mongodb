@@ -1,7 +1,9 @@
 package vn.hoangkhang.laptopshop.service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -263,13 +265,17 @@ public class ProductMongoService {
             review.setId(UUID.randomUUID().toString());
             review.setRating(reviewRequest.getRating());
             review.setContent(reviewRequest.getContent());
-            review.setCreatedAt(LocalDateTime.now());
-            review.setUpdatedAt(LocalDateTime.now());
+            review.setOrderId(reviewRequest.getOrderId());
+
+            LocalDateTime localDateTime = LocalDateTime.now();
+            review.setCreatedAt(Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant()));
+            review.setUpdatedAt(Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant()));
 
             UserMongo user = new UserMongo();
             user.setId(userMongo.getId());
             user.setFullName(userMongo.getFullName());
             user.setEmail(userMongo.getEmail());
+            user.setAvatar(userMongo.getAvatar());
 
             review.setUser(user);
 
@@ -277,5 +283,11 @@ public class ProductMongoService {
 
             this.productMongoRepository.save(product);
         }
+    }
+
+    public boolean check(UserMongo userMongo) {
+        List<ReviewMongo> reviews;
+
+        return false;
     }
 }

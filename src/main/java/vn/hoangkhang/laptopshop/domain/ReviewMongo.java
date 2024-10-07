@@ -1,6 +1,6 @@
 package vn.hoangkhang.laptopshop.domain;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -17,21 +17,23 @@ public class ReviewMongo {
     @Min(value = 1, message = "trường này là bắt buộc")
     private int rating;
     private String content;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private Date createdAt;
+    private Date updatedAt;
+    private String orderId;
 
     public ReviewMongo() {
 
     }
 
-    public ReviewMongo(String id, UserMongo user, int rating, String content, LocalDateTime createdAt,
-            LocalDateTime updatedAt) {
+    public ReviewMongo(String id, UserMongo user, int rating, String content, Date createdAt,
+            Date updatedAt, String orderId) {
         this.id = id;
         this.user = user;
         this.rating = rating;
         this.content = content;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.orderId = orderId;
     }
 
     public String getId() {
@@ -66,19 +68,27 @@ public class ReviewMongo {
         this.content = content;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 
-    public LocalDateTime getUpdatedAt() {
+    public Date getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
+    public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
     }
 }

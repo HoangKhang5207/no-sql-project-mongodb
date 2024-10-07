@@ -86,13 +86,14 @@
                                 <fmt:formatNumber type="number" value="${product.price}" /> đ
 
                             </h5>
-                            <!-- <div class="d-flex mb-4">
+                            <div class="d-flex mb-4 align-items-center">
                                 <i class="fa fa-star text-secondary"></i>
                                 <i class="fa fa-star text-secondary"></i>
                                 <i class="fa fa-star text-secondary"></i>
                                 <i class="fa fa-star text-secondary"></i>
-                                <i class="fa fa-star"></i>
-                            </div> -->
+                                <i class="fa fa-star text-secondary"></i>
+                                <span class="text-warning">(${reviews.size()})</span>
+                            </div>
                             <p class="mb-4">
                                 ${product.shortDesc}
                             </p>
@@ -131,58 +132,109 @@
                         <div class="col-lg-12">
                             <nav>
                                 <div class="nav nav-tabs mb-3">
-                                    <button class="nav-link active border-white border-bottom-0"
+                                    <button class="nav-link border-white border-bottom-0"
                                         type="button" role="tab" id="nav-about-tab" data-bs-toggle="tab"
                                         data-bs-target="#nav-about" aria-controls="nav-about"
-                                        aria-selected="true">Mô tả sản phẩm</button>
-                                    <button class="nav-link border-white border-bottom-0" 
+                                        aria-selected="false">Mô tả sản phẩm</button>
+                                    <button class="nav-link active border-white border-bottom-0" 
                                         type="button" role="tab" id="nav-mission-tab" data-bs-toggle="tab" 
                                         data-bs-target="#nav-mission" aria-controls="nav-mission" 
-                                        aria-selected="false">Các bài đánh giá</button>
+                                        aria-selected="true">Các bài đánh giá</button>
                                 </div>
                             </nav>
                             <div class="tab-content mb-5">
-                                <div class="tab-pane active" id="nav-about" role="tabpanel"
+                                <div class="tab-pane" id="nav-about" role="tabpanel"
                                     aria-labelledby="nav-about-tab">
                                     <p> ${product.detailDesc} </p>
                                 </div>
-                                <div class="tab-pane" id="nav-mission" role="tabpanel" aria-labelledby="nav-mission-tab">
-                                    <div class="d-flex">
-                                        <img src="img/avatar.jpg" class="img-fluid rounded-circle p-3" style="width: 100px; height: 100px;" alt="">
-                                        <div class="">
-                                            <p class="mb-2" style="font-size: 14px;">April 12, 2024</p>
-                                            <div class="d-flex justify-content-between">
-                                                <h5>Jason Smith</h5>
-                                                <div class="d-flex mb-3">
-                                                    <i class="fa fa-star text-secondary"></i>
-                                                    <i class="fa fa-star text-secondary"></i>
-                                                    <i class="fa fa-star text-secondary"></i>
-                                                    <i class="fa fa-star text-secondary"></i>
-                                                    <i class="fa fa-star"></i>
-                                                </div>
-                                            </div>
-                                            <p>The generated Lorem Ipsum is therefore always free from repetition injected humour, or non-characteristic 
-                                                words etc. Susp endisse ultricies nisi vel quam suscipit </p>
+                                <div class="tab-pane active" id="nav-mission" role="tabpanel" aria-labelledby="nav-mission-tab">
+                                    <div class="d-flex justify-content-between mb-3">
+                                        <div class="d-flex align-items-center">
+                                            <i class="fa fa-star text-secondary"></i>
+                                            <i class="fa fa-star text-secondary"></i>
+                                            <i class="fa fa-star text-secondary"></i>
+                                            <i class="fa fa-star text-secondary"></i>
+                                            <i class="fa fa-star text-secondary"></i>
+                                            <span class="text-warning">(${cntFiveStar})</span>
+                                        </div>
+
+                                        <div class="d-flex align-items-center">
+                                            <i class="fa fa-star text-secondary"></i>
+                                            <i class="fa fa-star text-secondary"></i>
+                                            <i class="fa fa-star text-secondary"></i>
+                                            <i class="fa fa-star text-secondary"></i>
+                                            <span class="text-warning">(${cntFourStar})</span>
+                                        </div>
+
+                                        <div class="d-flex align-items-center">
+                                            <i class="fa fa-star text-secondary"></i>
+                                            <i class="fa fa-star text-secondary"></i>
+                                            <i class="fa fa-star text-secondary"></i>
+                                            <span class="text-warning">(${cntThreeStar})</span>
+                                        </div>
+
+                                        <div class="d-flex align-items-center">
+                                            <i class="fa fa-star text-secondary"></i>
+                                            <i class="fa fa-star text-secondary"></i>
+                                            <span class="text-warning">(${cntTwoStar})</span>
+                                        </div>
+
+                                        <div class="d-flex align-items-center">
+                                            <i class="fa fa-star text-secondary"></i>
+                                            <span class="text-warning">(${cntOneStar})</span>
                                         </div>
                                     </div>
-                                    <div class="d-flex">
-                                        <img src="img/avatar.jpg" class="img-fluid rounded-circle p-3" style="width: 100px; height: 100px;" alt="">
-                                        <div class="">
-                                            <p class="mb-2" style="font-size: 14px;">April 12, 2024</p>
-                                            <div class="d-flex justify-content-between">
-                                                <h5>Sam Peters</h5>
-                                                <div class="d-flex mb-3">
-                                                    <i class="fa fa-star text-secondary"></i>
-                                                    <i class="fa fa-star text-secondary"></i>
-                                                    <i class="fa fa-star text-secondary"></i>
-                                                    <i class="fa fa-star"></i>
-                                                    <i class="fa fa-star"></i>
+                                    <c:if test="${reviews.size() == 0}">
+                                        <h3 class="text-center">Chưa có bài đánh giá nào của khách hàng!</h3>
+                                    </c:if>
+                                    <c:if test="${reviews.size() > 0}">
+                                        <c:forEach var="review" items="${reviews}">
+                                            <div class="d-flex mb-3">
+                                                <img src="/images/avatar/${review.user.avatar}" class="img-fluid rounded-circle p-3" style="width: 100px; height: 100px;" alt="">
+                                                <div class="">
+                                                    <p class="mb-2" style="font-size: 14px;">
+                                                        <fmt:formatDate value="${review.createdAt}" pattern="dd/MM/yyyy HH:mm:ss" />
+                                                    </p>
+                                                    <div class="d-flex justify-content-between">
+                                                        <h5 class="me-5">${review.user.fullName}</h5>
+                                                        <div class="d-flex mb-3">
+                                                            <c:forEach begin="1" end="${review.rating}">
+                                                                <i class="fa fa-star text-secondary"></i>
+                                                            </c:forEach>
+                                                            <c:if test="${review.rating <= 4}">
+                                                                <c:forEach begin="${review.rating + 1}" end="5">
+                                                                    <i class="fa fa-star"></i>
+                                                                </c:forEach>
+                                                            </c:if>
+                                                        </div>
+                                                    </div>
+                                                    <p>${review.content}</p>
                                                 </div>
                                             </div>
-                                            <p class="text-dark">The generated Lorem Ipsum is therefore always free from repetition injected humour, or non-characteristic 
-                                                words etc. Susp endisse ultricies nisi vel quam suscipit </p>
+                                        </c:forEach>
+                                        <div class="pagination d-flex justify-content-center mt-5">
+                                            <li class="page-item ${1 eq currentPage ? 'disabled' : ''}">
+                                                <a class="page-link"
+                                                    href="/product/${product.id}?page=${currentPage - 1}" aria-label="Previous">
+                                                    <span aria-hidden="true">&laquo;</span>
+                                                </a>
+                                            </li>
+                                            <c:forEach begin="0" end="${totalPages - 1}" varStatus="loop">
+                                                <li class="page-item">
+                                                    <a class="${(loop.index + 1) eq currentPage ? 'active page-link' : 'page-link'}"
+                                                        href="/product/${product.id}?page=${loop.index + 1}">
+                                                        ${loop.index + 1}
+                                                    </a>
+                                                </li>
+                                            </c:forEach>
+                                            <li class="page-item ${totalPages eq currentPage ? 'disabled' : ''}">
+                                                <a class="page-link"
+                                                    href="/product/${product.id}?page=${currentPage + 1}" aria-label="Next">
+                                                    <span aria-hidden="true">&raquo;</span>
+                                                </a>
+                                            </li>
                                         </div>
-                                    </div>
+                                    </c:if>
                                 </div>
                             </div>
                         </div>

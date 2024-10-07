@@ -91,6 +91,7 @@
                         <form:form action="/add-review-product" method="post" modelAttribute="newReview">
                             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                             <input type="hidden" name="productId" value="${product.id}" />
+                            <input type="hidden" name="orderId" value="${orderId}" />
                             <div class="row justify-content-start">
                                 <div class="mx-auto">
                                     <h3 class="text-center">Thông Tin Đánh Giá</h3>
