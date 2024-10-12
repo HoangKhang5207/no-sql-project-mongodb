@@ -151,8 +151,19 @@
                                     <td>
                                         <p class="mb-0 mt-4">
                                             <c:if test="${order.status.equals('COMPLETE')}">
-                                                <a href="/review-product/${orderDetail.product.id}?orderId=${order.id}" 
+                                                <c:if
+                                                test="${productService.checkProductWasReviewed(
+                                                    productService.getProductById(orderDetail.product.id), order.id) == false}">
+                                                    <a href="/review-product/${orderDetail.product.id}?orderId=${order.id}" 
                                                     class="alert alert-warning">Đánh giá sản phẩm</a>
+                                                </c:if>
+                                                <c:if
+                                                test="${productService.checkProductWasReviewed(
+                                                    productService.getProductById(orderDetail.product.id), order.id) == true}">
+                                                    <a href="/review-detail/${productService.getReviewOfProductById(
+                                                        productService.getProductById(orderDetail.product.id), order.id).id}?productId=${orderDetail.product.id}" 
+                                                    class="alert alert-info">Xem đánh giá</a>
+                                                </c:if>
                                             </c:if>
                                         </p>
                                     </td>

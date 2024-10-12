@@ -7,6 +7,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -25,6 +28,8 @@ import vn.hoangkhang.laptopshop.domain.OrderMongo;
 import vn.hoangkhang.laptopshop.domain.ProductMongo;
 import vn.hoangkhang.laptopshop.domain.ReviewMongo;
 import vn.hoangkhang.laptopshop.domain.UserMongo;
+import vn.hoangkhang.laptopshop.domain.dto.ProductCriteriaDTO;
+import vn.hoangkhang.laptopshop.domain.dto.ReviewCriteriaDTO;
 import vn.hoangkhang.laptopshop.repository.ProductMongoRepository;
 import vn.hoangkhang.laptopshop.repository.UserMongoRepository;
 
@@ -46,6 +51,107 @@ public class ProductMongoService {
 
     public Page<ProductMongo> getAllProducts(Pageable pageable) {
         return this.productMongoRepository.findAll(pageable);
+    }
+
+    public List<ProductMongo> getAllProductWithFilter(ProductCriteriaDTO productCriteriaDTO) {
+        List<ProductMongo> products = this.getAllProductsWithoutPagination();
+
+        if (productCriteriaDTO.getFactory() == null &&
+                productCriteriaDTO.getTarget() == null &&
+                productCriteriaDTO.getPrice() == null &&
+                productCriteriaDTO.getSort() == null) {
+            return products;
+        }
+
+        if (productCriteriaDTO.getFactory() != null && productCriteriaDTO.getFactory().isPresent()) {
+            products = this.getAllProductByFactories(products, productCriteriaDTO.getFactory().get());
+        }
+
+        if (productCriteriaDTO.getTarget() != null && productCriteriaDTO.getTarget().isPresent()) {
+            products = this.getAllProductByTargets(products, productCriteriaDTO.getTarget().get());
+        }
+
+        if (productCriteriaDTO.getPrice() != null && productCriteriaDTO.getPrice().isPresent()) {
+            products = this.buildPriceSpecification(products, productCriteriaDTO.getPrice().get());
+        }
+
+        if (productCriteriaDTO.getSort() != null &&
+                productCriteriaDTO.getSort().isPresent()) {
+            String sort = productCriteriaDTO.getSort().get();
+            if (sort.equals("gia-tang-dan")) {
+                products.sort((p1, p2) -> p1.getPrice().compareTo(p2.getPrice()));
+            } else if (sort.equals("gia-giam-dan")) {
+                products.sort((p1, p2) -> p2.getPrice().compareTo(p1.getPrice()));
+            }
+        }
+
+        return products;
+    }
+
+    public List<ProductMongo> getAllProductByFactories(List<ProductMongo> productsRequest, List<String> factories) {
+        List<ProductMongo> products = new ArrayList<>();
+
+        for (String factory : factories) {
+            products.addAll(productsRequest.stream()
+                    .filter(p -> p.getFactory().equals(factory))
+                    .toList());
+        }
+
+        return products;
+    }
+
+    public List<ProductMongo> getAllProductByTargets(List<ProductMongo> productsRequest, List<String> targets) {
+        List<ProductMongo> products = new ArrayList<>();
+
+        for (String target : targets) {
+            products.addAll(productsRequest.stream()
+                    .filter(p -> p.getTarget().equals(target))
+                    .toList());
+        }
+
+        return products;
+    }
+
+    public List<ProductMongo> buildPriceSpecification(List<ProductMongo> productsRequest, List<String> prices) {
+        List<ProductMongo> products = new ArrayList<>();
+
+        for (String price : prices) {
+            double min = 0;
+            double max = 0;
+
+            switch (price) {
+                case "duoi-10-trieu":
+                    min = 5000000;
+                    max = 10000000;
+                    break;
+                case "10-15-trieu":
+                    min = 10000000;
+                    max = 15000000;
+                    break;
+                case "15-20-trieu":
+                    min = 15000000;
+                    max = 20000000;
+                    break;
+                case "tren-20-trieu":
+                    min = 20000000;
+                    max = 200000000;
+                    break;
+            }
+
+            if (min != 0 && max != 0) {
+                double minPrice = min;
+                double maxPrice = max;
+                products.addAll(productsRequest.stream()
+                        .filter(p -> p.getPrice() >= minPrice && p.getPrice() <= maxPrice)
+                        .toList());
+            }
+        }
+
+        return products;
+    }
+
+    public List<ProductMongo> getAllProductsWithoutPagination() {
+        return this.productMongoRepository.findAll();
     }
 
     public Page<ProductMongo> getAllProductsRandom(Pageable pageable) {
@@ -285,9 +391,75 @@ public class ProductMongoService {
         }
     }
 
-    public boolean check(UserMongo userMongo) {
-        List<ReviewMongo> reviews;
+    public boolean checkProductWasReviewed(ProductMongo product, String orderId) {
+        if (product == null)
+            return false;
 
-        return false;
+        Optional<ReviewMongo> reviewOptional = product.getReviews().stream()
+                .filter(rv -> rv.getOrderId().equals(orderId)).findFirst();
+
+        return reviewOptional.isPresent();
+    }
+
+    public ReviewMongo getReviewOfProductById(ProductMongo product, String orderId) {
+        if (product == null)
+            return null;
+
+        Optional<ReviewMongo> reviewOptional = product.getReviews().stream()
+                .filter(rv -> rv.getOrderId().equals(orderId)).findFirst();
+
+        return reviewOptional.isPresent() ? reviewOptional.get() : null;
+    }
+
+    public ReviewMongo getReviewById(String reviewId) {
+        Optional<ProductMongo> reviewOptional = this.productMongoRepository.findReviewById(reviewId);
+        return reviewOptional.isPresent() ? reviewOptional.get().getReviews().get(0) : null;
+    }
+
+    public List<ReviewMongo> filterWithReviews(List<ReviewMongo> reviewRequest, ReviewCriteriaDTO reviewCriteriaDTO)
+            throws ParseException {
+        List<ReviewMongo> reviews = reviewRequest;
+
+        if (reviewCriteriaDTO.getSort() != null &&
+                reviewCriteriaDTO.getSort().isPresent()) {
+            String sort = reviewCriteriaDTO.getSort().get();
+            if (sort.equals("rating-tang-dan")) {
+                reviews.sort((r1, r2) -> Integer.compare(r1.getRating(), r2.getRating()));
+            } else if (sort.equals("rating-giam-dan")) {
+                reviews.sort((r1, r2) -> Integer.compare(r2.getRating(), r1.getRating()));
+            } else if (sort.equals("createdAt-tang-dan")) {
+                reviews.sort((r1, r2) -> r1.getCreatedAt().compareTo(r2.getCreatedAt()));
+            } else if (sort.equals("createdAt-giam-dan")) {
+                reviews.sort((r1, r2) -> r2.getCreatedAt().compareTo(r1.getCreatedAt()));
+            }
+        }
+
+        if (reviewCriteriaDTO.getRating() != null && reviewCriteriaDTO.getRating().isPresent() &&
+                !reviewCriteriaDTO.getRating().get().isEmpty()) {
+            int rating = Integer.parseInt(reviewCriteriaDTO.getRating().get());
+            reviews = reviews.stream().filter(rv -> rv.getRating() == rating).toList();
+        }
+
+        if (reviewCriteriaDTO.getFromDate() != null && reviewCriteriaDTO.getFromDate().isPresent() &&
+                !reviewCriteriaDTO.getFromDate().get().isEmpty()) {
+            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            Date fromDate = formatter.parse(reviewCriteriaDTO.getFromDate().get());
+            reviews = reviews.stream()
+                    .filter(rv -> rv.getCreatedAt().equals(fromDate) || rv.getCreatedAt().after(fromDate)).toList();
+        }
+
+        if (reviewCriteriaDTO.getToDate() != null && reviewCriteriaDTO.getToDate().isPresent() &&
+                !reviewCriteriaDTO.getToDate().get().isEmpty()) {
+            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            Date toDate = formatter.parse(reviewCriteriaDTO.getToDate().get());
+            reviews = reviews.stream()
+                    .filter(rv -> rv.getCreatedAt().equals(toDate) || rv.getCreatedAt().before(toDate)).toList();
+        }
+
+        return reviews;
+    }
+
+    public Long countReviews() {
+        return this.productMongoRepository.countAllNonEmptyReviews();
     }
 }

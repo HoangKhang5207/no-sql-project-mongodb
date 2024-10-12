@@ -4,10 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,10 +21,8 @@ import vn.hoangkhang.laptopshop.service.ProductMongoService;
 import vn.hoangkhang.laptopshop.service.UserMongoService;
 import vn.hoangkhang.laptopshop.domain.CartDetailMongo;
 import vn.hoangkhang.laptopshop.domain.CartMongo;
-// import vn.hoangkhang.laptopshop.domain.Product;
 import vn.hoangkhang.laptopshop.domain.ProductMongo;
 import vn.hoangkhang.laptopshop.domain.ReviewMongo;
-// import vn.hoangkhang.laptopshop.domain.Product_;
 import vn.hoangkhang.laptopshop.domain.UserMongo;
 
 @Controller
@@ -59,6 +53,14 @@ public class ItemController {
         }
 
         ProductMongo product = this.productMongoService.getProductById(productId);
+        List<ProductMongo> productList = this.productMongoService.getAllProductsWithoutPagination();
+
+        long cntApple = productList.stream().filter(p -> p.getFactory().equals("APPLE")).count();
+        long cntAsus = productList.stream().filter(p -> p.getFactory().equals("ASUS")).count();
+        long cntAcer = productList.stream().filter(p -> p.getFactory().equals("ACER")).count();
+        long cntHP = productList.stream().filter(p -> p.getFactory().equals("HP")).count();
+        long cntLenovo = productList.stream().filter(p -> p.getFactory().equals("LENOVO")).count();
+        long cntDell = productList.stream().filter(p -> p.getFactory().equals("DELL")).count();
 
         int size = 10;
         int skip = (page - 1) * size;
@@ -82,6 +84,14 @@ public class ItemController {
         model.addAttribute("cntThreeStar", ratingThreeStar);
         model.addAttribute("cntFourStar", ratingFourStar);
         model.addAttribute("cntFiveStar", ratingFiveStar);
+
+        model.addAttribute("cntApple", cntApple);
+        model.addAttribute("cntAsus", cntAsus);
+        model.addAttribute("cntAcer", cntAcer);
+        model.addAttribute("cntHP", cntHP);
+        model.addAttribute("cntLenovo", cntLenovo);
+        model.addAttribute("cntDell", cntDell);
+
         return "client/product/detail";
     }
 
@@ -220,51 +230,55 @@ public class ItemController {
         return "redirect:/order-history";
     }
 
-    // @GetMapping("/products")
-    // public String getProductPage(Model model, ProductCriteriaDTO
-    // productCriteriaDTO, HttpServletRequest request) {
-    // int page = 1;
-    // try {
-    // if (productCriteriaDTO.getPage().isPresent()) {
-    // // convert from String to int
-    // page = Integer.parseInt(productCriteriaDTO.getPage().get());
-    // } else {
-    // // page = 1
-    // }
-    // } catch (Exception e) {
-    // // page = 1
-    // // TODO: handle exception
-    // }
+    @GetMapping("/review-detail/{id}")
+    public String getReviewDetailPage(Model model, @PathVariable("id") String reviewId,
+            @RequestParam("productId") String productId) {
 
-    // Pageable pageable = PageRequest.of(page - 1, 3);
+        ProductMongo product = this.productMongoService.getProductById(productId);
+        ReviewMongo review = this.productMongoService.getReviewById(reviewId);
 
-    // // Sort By Price
-    // if (productCriteriaDTO.getSort() != null &&
-    // productCriteriaDTO.getSort().isPresent()) {
-    // String sort = productCriteriaDTO.getSort().get();
-    // if (sort.equals("gia-tang-dan")) {
-    // pageable = PageRequest.of(page - 1, 3, Sort.by(Product_.PRICE).ascending());
-    // } else if (sort.equals("gia-giam-dan")) {
-    // pageable = PageRequest.of(page - 1, 3, Sort.by(Product_.PRICE).descending());
-    // }
-    // }
+        model.addAttribute("product", product);
+        model.addAttribute("review", review);
 
-    // Page<Product> prs = this.productService.getAllProductsWithSpec(pageable,
-    // productCriteriaDTO);
+        return "client/product/review-detail";
+    }
 
-    // List<Product> products = prs.getContent().size() > 0 ? prs.getContent() : new
-    // ArrayList<Product>();
+    @GetMapping("/products")
+    public String getProductPage(Model model, ProductCriteriaDTO productCriteriaDTO, HttpServletRequest request) {
+        int page = 1;
+        try {
+            if (productCriteriaDTO.getPage().isPresent()) {
+                // convert from String to int
+                page = Integer.parseInt(productCriteriaDTO.getPage().get());
+            } else {
+                // page = 1
+            }
+        } catch (Exception e) {
+            // page = 1
+        }
 
-    // String qs = request.getQueryString();
-    // if (qs != null && !qs.isBlank()) {
-    // // remove page
-    // qs = qs.replace("page=" + page, "");
-    // }
+        int size = 6;
+        int skip = (page - 1) * size;
+        int totalPages = 0;
 
-    // model.addAttribute("products", products);
-    // model.addAttribute("currentPage", page);
-    // model.addAttribute("totalPages", prs.getTotalPages());
-    // model.addAttribute("queryString", qs);
-    // return "client/product/show";
-    // }
+        List<ProductMongo> products = this.productMongoService
+                .getAllProductWithFilter(productCriteriaDTO).size() > 0 ? this.productMongoService
+                        .getAllProductWithFilter(productCriteriaDTO) : new ArrayList<ProductMongo>();
+
+        totalPages = (int) Math.ceil((double) products.size() / size);
+
+        products = products.stream().skip(skip).limit(size).toList();
+
+        String qs = request.getQueryString();
+        if (qs != null && !qs.isBlank()) {
+            // remove page
+            qs = qs.replace("page=" + page, "");
+        }
+
+        model.addAttribute("products", products);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("queryString", qs);
+        return "client/product/show";
+    }
 }

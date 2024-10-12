@@ -127,7 +127,6 @@
                                 Thêm vào giỏ hàng
                             </button>
                             <!-- </form> -->
-
                         </div>
                         <div class="col-lg-12">
                             <nav>
@@ -190,7 +189,9 @@
                                     <c:if test="${reviews.size() > 0}">
                                         <c:forEach var="review" items="${reviews}">
                                             <div class="d-flex mb-3">
-                                                <img src="/images/avatar/${review.user.avatar}" class="img-fluid rounded-circle p-3" style="width: 100px; height: 100px;" alt="">
+                                                <img src="/images/avatar/${review.user.avatar}"
+                                                    class="img-fluid rounded-circle p-3" style="width: 100px; height: 100px;"
+                                                    alt="" loading="lazy">
                                                 <div class="">
                                                     <p class="mb-2" style="font-size: 14px;">
                                                         <fmt:formatDate value="${review.createdAt}" pattern="dd/MM/yyyy HH:mm:ss" />
@@ -250,32 +251,38 @@
                                 <ul class="list-unstyled fruite-categorie">
                                     <li>
                                         <div class="d-flex justify-content-between fruite-name">
-                                            <a href="#"><i class="fas fa-apple-alt me-2"></i>Apples</a>
-                                            <span>(3)</span>
+                                            <a href="/products?page=1&sort=gia-nothing&factory=APPLE"><i class="fas fa-apple-alt me-2"></i>Apples</a>
+                                            <span>(${cntApple})</span>
                                         </div>
                                     </li>
                                     <li>
                                         <div class="d-flex justify-content-between fruite-name">
-                                            <a href="#"><i class="fas fa-apple-alt me-2"></i>Dell</a>
-                                            <span>(5)</span>
+                                            <a href="/products?page=1&sort=gia-nothing&factory=DELL"><i class="fas fa-apple-alt me-2"></i>Dell</a>
+                                            <span>(${cntDell})</span>
                                         </div>
                                     </li>
                                     <li>
                                         <div class="d-flex justify-content-between fruite-name">
-                                            <a href="#"><i class="fas fa-apple-alt me-2"></i>Asus</a>
-                                            <span>(2)</span>
+                                            <a href="/products?page=1&sort=gia-nothing&factory=ASUS"><i class="fas fa-apple-alt me-2"></i>Asus</a>
+                                            <span>(${cntAsus})</span>
                                         </div>
                                     </li>
                                     <li>
                                         <div class="d-flex justify-content-between fruite-name">
-                                            <a href="#"><i class="fas fa-apple-alt me-2"></i>Acer</a>
-                                            <span>(8)</span>
+                                            <a href="/products?page=1&sort=gia-nothing&factory=ACER"><i class="fas fa-apple-alt me-2"></i>Acer</a>
+                                            <span>(${cntAcer})</span>
                                         </div>
                                     </li>
                                     <li>
                                         <div class="d-flex justify-content-between fruite-name">
-                                            <a href="#"><i class="fas fa-apple-alt me-2"></i>Lenovo</a>
-                                            <span>(5)</span>
+                                            <a href="/products?page=1&sort=gia-nothing&factory=LENOVO"><i class="fas fa-apple-alt me-2"></i>Lenovo</a>
+                                            <span>(${cntLenovo})</span>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="d-flex justify-content-between fruite-name">
+                                            <a href="/products?page=1&sort=gia-nothing&factory=HP"><i class="fas fa-apple-alt me-2"></i>HP</a>
+                                            <span>(${cntHP})</span>
                                         </div>
                                     </li>
                                 </ul>

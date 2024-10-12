@@ -15,7 +15,7 @@
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 </head>
 
-<body class="bg-primary">
+<body style="background-color: #547f03;">
     <div id="layoutAuthentication">
         <div id="layoutAuthentication_content">
             <main>
@@ -54,14 +54,14 @@
 
                                         <div class="mt-4 mb-0">
                                             <div class="d-grid">
-                                                <input type="submit" value="Login" class="btn btn-primary btn-block">
+                                                <input type="submit" value="Đăng nhập" class="btn btn-block" style="background-color: #81c408;">
                                                 </input>
                                             </div>
                                         </div>
                                     </form>
                                 </div>
                                 <div class="card-footer text-center py-3">
-                                    <div class="small"><a href="/register">Bạn chưa có tài khoản? Đăng ký ngay!</a>
+                                    <div class=""><a href="/register">Bạn chưa có tài khoản? Đăng ký ngay!</a>
                                     </div>
                                 </div>
                             </div>

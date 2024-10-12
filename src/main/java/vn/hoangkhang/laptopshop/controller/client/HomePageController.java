@@ -101,6 +101,7 @@ public class HomePageController {
         String id = (String) session.getAttribute("id");
         currentUser.setId(id);
 
+        model.addAttribute("productService", this.productMongoService);
         List<OrderMongo> orders = this.userMongoService.fetchOrderByUser(currentUser);
         model.addAttribute("orders", orders);
 

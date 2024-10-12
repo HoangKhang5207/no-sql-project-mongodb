@@ -13,7 +13,7 @@
         <link href="/css/styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
     </head>
-    <body class="bg-primary">
+    <body style="background-color: #547f03;">
         <div id="layoutAuthentication">
             <div id="layoutAuthentication_content">
                 <main>
@@ -73,13 +73,13 @@
                                             </div>
                                             <div class="mt-4 mb-0">
                                                 <div class="d-grid">
-                                                    <input type="submit" class="btn btn-primary btn-block" value="Tạo tài khoản"></input>
+                                                    <input style="background-color: #81c408;" type="submit" class="btn btn-block" value="Tạo tài khoản"></input>
                                                 </div>
                                             </div>
                                         </form:form>
                                     </div>
                                     <div class="card-footer text-center py-3">
-                                        <div class="small"><a href="/login">Bạn đã có tài khoản? Đăng nhập ngay!</a></div>
+                                        <div class=""><a href="/login">Bạn đã có tài khoản? Đăng nhập ngay!</a></div>
                                     </div>
                                 </div>
                             </div>

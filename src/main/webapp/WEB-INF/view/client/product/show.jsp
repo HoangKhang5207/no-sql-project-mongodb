@@ -89,17 +89,18 @@
                                         value="DELL">
                                     <label class="form-check-label" for="factory-4">Dell</label>
                                 </div>
+
                                 <div class="form-check form-check-inline">
                                     <input class="form-check-input" type="checkbox" id="factory-5"
-                                        value="LG">
-                                    <label class="form-check-label" for="factory-5">LG</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" id="factory-6"
                                         value="ACER">
-                                    <label class="form-check-label" for="factory-6">Acer</label>
+                                    <label class="form-check-label" for="factory-5">Acer</label>
                                 </div>
 
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="factory-6"
+                                        value="HP">
+                                    <label class="form-check-label" for="factory-6">HP</label>
+                                </div>
                             </div>
                             <div class="col-12" id="targetFilter">
                                 <div class="mb-2"><b>Mục đích sử dụng</b></div>
@@ -204,7 +205,7 @@
                                     <div class="rounded position-relative fruite-item">
                                         <div class="fruite-img">
                                             <img src="/images/product/${product.image}"
-                                                class="img-fluid w-100 rounded-top" alt="">
+                                                class="img-fluid w-100 rounded-top" alt="" loading="lazy">
                                         </div>
                                         <div class="text-white bg-secondary px-3 py-1 rounded position-absolute"
                                             style="top: 10px; left: 10px;">Laptop
