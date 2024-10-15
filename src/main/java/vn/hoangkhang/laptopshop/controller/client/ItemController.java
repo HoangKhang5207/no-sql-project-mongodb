@@ -12,12 +12,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import vn.hoangkhang.laptopshop.domain.dto.ProductCriteriaDTO;
 import vn.hoangkhang.laptopshop.service.ProductMongoService;
+import vn.hoangkhang.laptopshop.service.UploadService;
 import vn.hoangkhang.laptopshop.service.UserMongoService;
 import vn.hoangkhang.laptopshop.domain.CartDetailMongo;
 import vn.hoangkhang.laptopshop.domain.CartMongo;
@@ -30,11 +32,13 @@ public class ItemController {
 
     private final ProductMongoService productMongoService;
     private final UserMongoService userMongoService;
+    private final UploadService uploadService;
 
     public ItemController(ProductMongoService productMongoService,
-            UserMongoService userMongoService) {
+            UserMongoService userMongoService, UploadService uploadService) {
         this.productMongoService = productMongoService;
         this.userMongoService = userMongoService;
+        this.uploadService = uploadService;
     }
 
     @GetMapping("/product/{productId}")
@@ -78,6 +82,7 @@ public class ItemController {
         model.addAttribute("reviews", product.getReviews().stream().skip(skip).limit(size).toList());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
+        model.addAttribute("cntProductsSold", this.productMongoService.countTheNumberOfProductsSold(productId));
 
         model.addAttribute("cntOneStar", ratingOneStar);
         model.addAttribute("cntTwoStar", ratingTwoStar);
@@ -215,12 +220,20 @@ public class ItemController {
             @Valid @ModelAttribute("newReview") ReviewMongo newReview,
             BindingResult bindingResult,
             @RequestParam("productId") String id,
+            @RequestParam("reviewFile") MultipartFile[] files,
             HttpServletRequest request) {
 
         if (bindingResult.hasErrors()) {
             ProductMongo product = this.productMongoService.getProductById(id);
             model.addAttribute("product", product);
             return "client/product/review";
+        }
+
+        if (files != null && !files[0].getOriginalFilename().isEmpty() && files.length > 0) {
+            List<String> fileNames = this.uploadService.handleUploadMultipleFiles(files, "review");
+            newReview.setImages(fileNames);
+        } else {
+            newReview.setImages(new ArrayList<String>());
         }
 
         HttpSession session = request.getSession(false);

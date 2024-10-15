@@ -53,21 +53,27 @@
                       <form:input type="text" class="form-control" path="id" />
                     </div>
                     <div class="mb-3">
-                      <label>Mã đơn hàng: ${newOrder.id} </label>
+                      <label>Mã đơn hàng: <strong>${newOrder.id}</strong> </label>
                       &nbsp; &nbsp; &nbsp; &nbsp;
-                      <label class="form-label"
-                        >Giá:
-                        <fmt:formatNumber
+                      <label> Giá:
+                        <strong><fmt:formatNumber
                           type="number"
                           value="${newOrder.totalPrice}"
                         />
-                        đ
+                        đ</strong>
+                      </label>
+                    </div>
+                    <div class="mb-3">
+                      <label>Ngày đặt hàng: 
+                        <strong>
+                          <fmt:formatDate value="${newOrder.orderDate}" pattern="dd/MM/yyyy HH:mm:ss" />
+                        </strong>
                       </label>
                     </div>
 
                     <div class="mb-3 col-12 col-md-6">
                       <label class="form-label">Người nhận:</label>
-                      <p>${newOrder.receiverName}</p>
+                      <p><strong>${newOrder.receiverName}</strong></p>
                     </div>
 
                     <div class="mb-3 col-12 col-md-6">

@@ -35,8 +35,11 @@
                     <div class="mt-5">
                         <div class="row">
                             <div class="col-12 mx-auto">
-                                <div class="d-flex justify-content-between">
+                                <div class="">
                                     <h3>Chi tiết đơn hàng với mã: ${id}</h3>
+                                    <h3>Ngày đặt hàng:
+                                        <fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy HH:mm:ss" />
+                                    </h3>
                                 </div>
 
                                 <hr />
@@ -56,7 +59,7 @@
                                             <c:if test="${ empty orderDetails}">
                                                 <tr>
                                                     <td colspan="6">
-                                                        Không có đơn hàng nào tồn tại.
+                                                        Không có đơn hàng nào được đặt.
                                                     </td>
                                                 </tr>
                                             </c:if>

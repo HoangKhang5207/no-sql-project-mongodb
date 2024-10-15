@@ -42,6 +42,19 @@
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-toast-plugin/1.3.2/jquery.toast.min.css"
         rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+        // Bắt sự kiện nhấn vào ảnh
+        $('.image-thumbnail').click(function(){
+          const imageUrl = $(this).attr('src');
+          $('#modalImage').attr('src', imageUrl);
+
+          // Hiển thị modal tại vị trí hiện tại của ảnh
+          $('#imageModal').modal('show');
+        });
+      });
+    </script>
 </head>
 
 <body>
@@ -105,14 +118,42 @@
                                     </div>
                                     <div class="col-12 form-group mb-3">
                                         <label class="form-label">Nội dung đánh giá</label>
-                                        <h4>${review.content}</h4>
+                                        <c:if test="${empty review.content}">
+                                            <h4 class="text-center">Không có nội dung</h4>
+                                        </c:if>
+                                        <c:if test="${not empty review.content}">
+                                            <h4>${review.content}</h4>
+                                        </c:if>
                                     </div>
                                     <div class="col-12 form-group mb-3">
-                                        <label class="form-label">Thời gian tạo đánh giá</label>
+                                        <label class="form-label">Ngày đánh giá</label>
                                         <h4>
                                             <fmt:formatDate value="${review.createdAt}" pattern="dd/MM/yyyy HH:mm:ss" />
                                         </h4>
                                     </div>
+                                    <c:if test="${review.images.size() > 0}">
+                                        <div class="col-12 d-flex mb-3 justify-content-center gap-1">
+                                            <c:if test="${review.images.size() <= 3}">
+                                                <c:forEach var="image" items="${review.images}">
+                                                    <img src="/images/review/${image}" alt="${image}" class="image-thumbnail"
+                                                        style="max-width: 200px; max-height: 160px; object-fit: cover; cursor: pointer;">
+                                                </c:forEach>
+                                            </c:if>
+                                            <c:if test="${review.images.size() > 3}">
+                                                <c:forEach var="index" begin="0" end="2">
+                                                    <img src="/images/review/${review.images[index]}" alt="review image ${index}" class="image-thumbnail"
+                                                        style="max-width: 200px; max-height: 160px; object-fit: cover; cursor: pointer;">
+                                                </c:forEach>
+                                                <a href="#" data-bs-toggle="modal" data-bs-target="#imageModalCarousel">
+                                                    <div class="position-relative">
+                                                        <img src="/images/review/${review.images[3]}" alt="Image 5"
+                                                            style="max-width: 200px; max-height: 160px; object-fit: cover; cursor: pointer; opacity: 0.6;">
+                                                        <span class="position-absolute top-50 start-50 translate-middle text-white bg-dark rounded px-2 fs-5">+${review.images.size() - 3}</span>
+                                                    </div>
+                                                </a>
+                                            </c:if>
+                                        </div>
+                                    </c:if>
                                     <div class="mt-2 d-flex justify-content-between align-items-center">
                                         <div>
                                             <i class="fas fa-arrow-left"></i>
@@ -128,6 +169,59 @@
         </div>
     </div>
     <!-- Single Product End -->
+
+    <!-- Modal Review Image -->
+    <div class="modal fade" id="imageModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <img src="" id="modalImage" class="img-fluid" alt="Selected Image" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal with Carousel -->
+    <div class="modal fade" id="imageModalCarousel" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-indicators">
+                            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                            <c:forEach var="index" begin="1" end="${review.images.size() - 1}">
+                                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="${index}" aria-label="Slide ${index + 1}"></button>
+                            </c:forEach>
+                        </div>
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img src="/images/review/${review.images[0]}" class="d-block w-100" alt="Image 1">
+                            </div>
+                            <c:forEach var="index" begin="1" end="${review.images.size() - 1}">
+                                <div class="carousel-item">
+                                    <img src="/images/review/${review.images[index]}" class="d-block w-100" alt="Review Image">
+                                </div>
+                            </c:forEach>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <jsp:include page="../layout/footer.jsp" />
 

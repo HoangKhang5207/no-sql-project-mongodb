@@ -28,6 +28,7 @@ import vn.hoangkhang.laptopshop.domain.OrderMongo;
 import vn.hoangkhang.laptopshop.domain.ProductMongo;
 import vn.hoangkhang.laptopshop.domain.ReviewMongo;
 import vn.hoangkhang.laptopshop.domain.UserMongo;
+import vn.hoangkhang.laptopshop.domain.dto.AggregatedOrders;
 import vn.hoangkhang.laptopshop.domain.dto.ProductCriteriaDTO;
 import vn.hoangkhang.laptopshop.domain.dto.ReviewCriteriaDTO;
 import vn.hoangkhang.laptopshop.repository.ProductMongoRepository;
@@ -154,19 +155,12 @@ public class ProductMongoService {
         return this.productMongoRepository.findAll();
     }
 
-    public Page<ProductMongo> getAllProductsRandom(Pageable pageable) {
-        Aggregation aggregation = Aggregation.newAggregation(
-                Aggregation.sample(pageable.getPageSize()),
-                Aggregation.skip((long) pageable.getOffset()),
-                Aggregation.limit(pageable.getPageSize()));
+    public List<ProductMongo> getAllTheBestSellingProducts(int size, int skip) {
+        List<ProductMongo> products = this.getAllProductsWithoutPagination();
 
-        AggregationResults<ProductMongo> results = mongoTemplate.aggregate(aggregation, "products",
-                ProductMongo.class);
-        List<ProductMongo> productList = results.getMappedResults();
+        products.sort((p1, p2) -> p2.getSold().compareTo(p1.getSold()));
 
-        long totalProducts = mongoTemplate.count(new Query(), ProductMongo.class);
-
-        return new PageImpl<>(productList, pageable, totalProducts);
+        return products.stream().skip(skip).limit(size).toList();
     }
 
     public ProductMongo handleSaveProduct(ProductMongo productMongo) {
@@ -328,6 +322,9 @@ public class ProductMongoService {
                 order.setReceiverPhone(receiverPhone);
                 order.setStatus("PENDING");
 
+                LocalDateTime localDateTime = LocalDateTime.now();
+                order.setOrderDate(Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant()));
+
                 double sum = 0;
                 for (CartDetailMongo cd : cartDetails) {
                     sum += (cd.getPrice() * cd.getQuantity());
@@ -371,6 +368,7 @@ public class ProductMongoService {
             review.setId(UUID.randomUUID().toString());
             review.setRating(reviewRequest.getRating());
             review.setContent(reviewRequest.getContent());
+            review.setImages(reviewRequest.getImages());
             review.setOrderId(reviewRequest.getOrderId());
 
             LocalDateTime localDateTime = LocalDateTime.now();
@@ -461,5 +459,24 @@ public class ProductMongoService {
 
     public Long countReviews() {
         return this.productMongoRepository.countAllNonEmptyReviews();
+    }
+
+    public Long countTheNumberOfProductsSold(String productId) {
+        Long res = 0L;
+        AggregatedOrders aggregatedOrders = this.userMongoRepository.findAllNonEmptyOrders();
+        for (OrderMongo order : aggregatedOrders.getOrders()) {
+            res += order.getOrderDetails().stream().filter(od -> od.getProduct().getId().equals(productId)).count();
+        }
+
+        return res;
+    }
+
+    public void handleDeleteReview(String reviewId, String productId) {
+        ProductMongo product = this.getProductById(productId);
+
+        if (product != null) {
+            product.getReviews().removeIf(r -> r.getId().equals(reviewId));
+            this.productMongoRepository.save(product);
+        }
     }
 }

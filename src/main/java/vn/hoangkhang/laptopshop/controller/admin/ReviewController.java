@@ -6,7 +6,10 @@ import java.text.ParseException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.servlet.http.HttpServletRequest;
 import vn.hoangkhang.laptopshop.domain.ProductMongo;
@@ -113,5 +116,48 @@ public class ReviewController {
         model.addAttribute("sort", sort);
 
         return "admin/review/detail";
+    }
+
+    @GetMapping("/admin/review/del/{id}")
+    public String getReviewDeletePage(Model model, @PathVariable("id") String reviewId,
+            ReviewCriteriaDTO reviewCriteriaDTO) {
+
+        ReviewMongo newReview = new ReviewMongo();
+        newReview.setId(reviewId);
+
+        int page = Integer.parseInt(reviewCriteriaDTO.getPage().get());
+        String productId = reviewCriteriaDTO.getProductId().get();
+        String rating = reviewCriteriaDTO.getRating().get();
+        String fromDate = reviewCriteriaDTO.getFromDate().get();
+        String toDate = reviewCriteriaDTO.getToDate().get();
+        String sort = reviewCriteriaDTO.getSort().get();
+
+        model.addAttribute("newReview", newReview);
+        model.addAttribute("productId", productId);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("rating", rating);
+        model.addAttribute("fromDate", fromDate);
+        model.addAttribute("toDate", toDate);
+        model.addAttribute("sort", sort);
+
+        return "admin/review/delete";
+    }
+
+    @PostMapping("/admin/review-delete")
+    public String handleDeleteProductReview(@ModelAttribute("newReview") ReviewMongo review,
+            ReviewCriteriaDTO reviewCriteriaDTO, @RequestParam("ratingStar") String ratingStar) {
+
+        int page = Integer.parseInt(reviewCriteriaDTO.getPage().get());
+        String productId = reviewCriteriaDTO.getProductId().get();
+        String rating = ratingStar;
+        String fromDate = reviewCriteriaDTO.getFromDate().get();
+        String toDate = reviewCriteriaDTO.getToDate().get();
+        String sort = reviewCriteriaDTO.getSort().get();
+
+        this.productMongoService.handleDeleteReview(review.getId(), productId);
+
+        return "redirect:/admin/review?page=" + page + "&productId=" + productId
+                + "&rating=" + rating + "&fromDate=" + fromDate
+                + "&toDate=" + toDate + "&sort=" + sort;
     }
 }

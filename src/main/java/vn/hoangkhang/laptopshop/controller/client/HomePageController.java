@@ -42,10 +42,11 @@ public class HomePageController {
 
     @GetMapping("/")
     public String getHomePage(Model model) {
-        Pageable pageable = PageRequest.of(0, 12);
-        Page<ProductMongo> pageProduct = this.productMongoService.getAllProductsRandom(pageable);
-        List<ProductMongo> products = pageProduct.getContent();
+        int size = 12;
+        int skip = 0;
+        List<ProductMongo> products = this.productMongoService.getAllTheBestSellingProducts(size, skip);
         model.addAttribute("products", products);
+        model.addAttribute("productService", this.productMongoService);
         return "client/homepage/show";
     }
 

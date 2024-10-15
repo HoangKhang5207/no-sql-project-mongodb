@@ -69,9 +69,9 @@
           </nav>
         </div>
         <c:if test="${ cartDetails.size() == 0 }">
-          <h1 class="alert alert-info text-center">
+          <h3 class="alert alert-info text-center">
             Không có sản phẩm nào trong giỏ hàng! Hãy mua hàng nào!
-          </h1>
+          </h3>
         </c:if>
         <c:if test="${ cartDetails.size() > 0 }">
           <div class="table-responsive">

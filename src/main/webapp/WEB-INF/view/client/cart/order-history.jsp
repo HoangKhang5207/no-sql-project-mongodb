@@ -75,9 +75,9 @@
                         <c:if test="${ empty orders }">
                             <tr>
                                 <td colspan="6">
-                                    <p class="text-center fw-bold alert alert-info">
-                                        Không có đơn hàng nào được tạo
-                                    </p>
+                                    <h3 class="text-center fw-bold alert alert-info">
+                                        Bạn chưa đặt hàng. Hãy mua hàng ngay để nhận ưu đãi!
+                                    </h3>
                                 </td>
                             </tr>
                         </c:if>
@@ -88,15 +88,16 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="2">
+                                <td colspan="1">
                                     <span class="fw-bold">Mã đơn hàng: ${order.id}</span>
                                 </td>
-                                <td colspan="1"></td>
-                                <td colspan="1">
-                                    <span class="fw-bold">Tổng tiền:</span>
+                                <td colspan="2">
+                                    <span class="fw-bold">Ngày đặt hàng:
+                                        <fmt:formatDate type="date" value="${order.orderDate}" pattern="dd/MM/yyyy HH:mm:ss" />
+                                    </span>
                                 </td>
-                                <td colspan="1">
-                                    <span class="fw-bold">
+                                <td colspan="2">
+                                    <span class="fw-bold">Tổng tiền:
                                         <fmt:formatNumber type="number" value=" ${order.totalPrice}" />
                                         đ
                                     </span>

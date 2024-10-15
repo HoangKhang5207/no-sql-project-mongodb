@@ -43,6 +43,31 @@
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-toast-plugin/1.3.2/jquery.toast.min.css"
         rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(() => {
+            const reviewImage = $("#reviewImage");
+
+            reviewImage.change(function (e) {
+                const files = e.target.files;
+                const previewContainer = $("#imagePreviewContainer");
+
+                previewContainer.empty();
+
+                Array.from(files).forEach(file => {
+                    const imgURL = URL.createObjectURL(file);
+
+                    const imgElement = $("<img />", {
+                        src: imgURL,
+                        style: "max-height: 100px; max-width: 100px; object-fit: cover; display: block;",
+                        class: "mx-auto"
+                    });
+
+                    previewContainer.append(imgElement);
+                });
+            });
+        });
+    </script>
 </head>
 
 <body>
@@ -88,7 +113,8 @@
                                 </p>
                             </div>
                         </div>
-                        <form:form action="/add-review-product" method="post" modelAttribute="newReview">
+                        <form:form action="/add-review-product" method="post" 
+                                    modelAttribute="newReview" enctype="multipart/form-data">
                             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                             <input type="hidden" name="productId" value="${product.id}" />
                             <input type="hidden" name="orderId" value="${orderId}" />
@@ -114,6 +140,14 @@
                                         <div class="col-12 form-group mb-3">
                                             <label class="form-label">Nội dung đánh giá</label>
                                             <form:textarea class="form-control" path="content"></form:textarea>
+                                        </div>
+                                        <div class="col-12 form-group mb-3">
+                                            <label class="form-label">Tải ảnh lên (nếu có)</label>
+                                            <form:input class="form-control" path="" type="file" multiple="multiple"
+                                                        id="reviewImage" accept=".png, .jpg, .jpeg" name="reviewFile" />
+                                        </div>
+                                        <div class="col-12 mb-3" id="imagePreviewContainer"
+                                            style="display: flex; flex-wrap: wrap; gap: 10px;">
                                         </div>
                                         <div class="mt-2 d-flex justify-content-between align-items-center">
                                             <div>

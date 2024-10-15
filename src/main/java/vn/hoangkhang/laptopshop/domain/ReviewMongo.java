@@ -1,6 +1,7 @@
 package vn.hoangkhang.laptopshop.domain;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -17,6 +18,7 @@ public class ReviewMongo {
     @Min(value = 1, message = "trường này là bắt buộc")
     private int rating;
     private String content;
+    private List<String> images;
     private Date createdAt;
     private Date updatedAt;
     private String orderId;
@@ -25,12 +27,13 @@ public class ReviewMongo {
 
     }
 
-    public ReviewMongo(String id, UserMongo user, int rating, String content, Date createdAt,
-            Date updatedAt, String orderId) {
+    public ReviewMongo(String id, UserMongo user, int rating, String content, List<String> images,
+            Date createdAt, Date updatedAt, String orderId) {
         this.id = id;
         this.user = user;
         this.rating = rating;
         this.content = content;
+        this.images = images;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.orderId = orderId;
@@ -66,6 +69,14 @@ public class ReviewMongo {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public List<String> getImages() {
+        return images;
+    }
+
+    public void setImages(List<String> images) {
+        this.images = images;
     }
 
     public Date getCreatedAt() {

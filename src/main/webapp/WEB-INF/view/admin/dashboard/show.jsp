@@ -30,7 +30,7 @@
                     <div class="row justify-content-between">
                         <div class="col-xl-3 col-md-6">
                             <div class="card bg-primary text-white mb-4">
-                                <div class="card-body">Số lượng người dùng (${countUsers})</div>
+                                <div class="card-body">Số lượng người dùng (${countUsers > 0 ? countUsers : 0})</div>
                                 <div class="card-footer d-flex align-items-center justify-content-between">
                                     <a class="small text-white stretched-link" href="/admin/user">Xem chi tiết</a>
                                     <div class="small text-white"><i class="fas fa-angle-right"></i></div>
@@ -39,7 +39,7 @@
                         </div>
                         <div class="col-xl-3 col-md-6">
                             <div class="card bg-danger text-white mb-4">
-                                <div class="card-body">Số lượng sản phẩm (${countProducts})</div>
+                                <div class="card-body">Số lượng sản phẩm (${countProducts > 0 ? countProducts : 0})</div>
                                 <div class="card-footer d-flex align-items-center justify-content-between">
                                     <a class="small text-white stretched-link" href="/admin/product">Xem chi tiết</a>
                                     <div class="small text-white"><i class="fas fa-angle-right"></i></div>
@@ -48,7 +48,7 @@
                         </div>
                         <div class="col-xl-3 col-md-6">
                             <div class="card bg-success text-white mb-4">
-                                <div class="card-body">Số lượng đơn hàng (${countOrders})</div>
+                                <div class="card-body">Số lượng đơn hàng (${countOrders > 0 ? countOrders : 0})</div>
                                 <div class="card-footer d-flex align-items-center justify-content-between">
                                     <a class="small text-white stretched-link" href="/admin/order">Xem chi tiết</a>
                                     <div class="small text-white"><i class="fas fa-angle-right"></i></div>
@@ -57,7 +57,7 @@
                         </div>
                         <div class="col-xl-3 col-md-6">
                             <div class="card bg-warning text-white mb-4">
-                                <div class="card-body">Số lượng đánh giá (${countReviews})</div>
+                                <div class="card-body">Số lượng đánh giá (${countReviews > 0 ? countReviews : 0})</div>
                                 <div class="card-footer d-flex align-items-center justify-content-between">
                                     <a class="small text-white stretched-link" href="/admin/review">Xem chi tiết</a>
                                     <div class="small text-white"><i class="fas fa-angle-right"></i></div>

@@ -1,5 +1,6 @@
 package vn.hoangkhang.laptopshop.domain;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
@@ -11,6 +12,7 @@ public class OrderMongo {
     @Id
     private String id;
     private double totalPrice;
+    private Date orderDate;
     private String receiverAddress;
     private String receiverName;
     private String receiverPhone;
@@ -20,10 +22,11 @@ public class OrderMongo {
     public OrderMongo() {
     }
 
-    public OrderMongo(String id, double totalPrice, String receiverAddress, String receiverName, String receiverPhone,
-            String status, List<OrderDetailMongo> orderDetails) {
+    public OrderMongo(String id, double totalPrice, Date orderDate, String receiverAddress, String receiverName,
+            String receiverPhone, String status, List<OrderDetailMongo> orderDetails) {
         this.id = id;
         this.totalPrice = totalPrice;
+        this.orderDate = orderDate;
         this.receiverAddress = receiverAddress;
         this.receiverName = receiverName;
         this.receiverPhone = receiverPhone;
@@ -45,6 +48,14 @@ public class OrderMongo {
 
     public void setTotalPrice(double totalPrice) {
         this.totalPrice = totalPrice;
+    }
+
+    public Date getOrderDate() {
+        return orderDate;
+    }
+
+    public void setOrderDate(Date orderDate) {
+        this.orderDate = orderDate;
     }
 
     public String getReceiverAddress() {
@@ -95,6 +106,7 @@ public class OrderMongo {
         long temp;
         temp = Double.doubleToLongBits(totalPrice);
         result = prime * result + (int) (temp ^ (temp >>> 32));
+        result = prime * result + ((orderDate == null) ? 0 : orderDate.hashCode());
         result = prime * result + ((receiverAddress == null) ? 0 : receiverAddress.hashCode());
         result = prime * result + ((receiverName == null) ? 0 : receiverName.hashCode());
         result = prime * result + ((receiverPhone == null) ? 0 : receiverPhone.hashCode());
@@ -118,6 +130,11 @@ public class OrderMongo {
         } else if (!id.equals(other.id))
             return false;
         if (Double.doubleToLongBits(totalPrice) != Double.doubleToLongBits(other.totalPrice))
+            return false;
+        if (orderDate == null) {
+            if (other.orderDate != null)
+                return false;
+        } else if (!orderDate.equals(other.orderDate))
             return false;
         if (receiverAddress == null) {
             if (other.receiverAddress != null)

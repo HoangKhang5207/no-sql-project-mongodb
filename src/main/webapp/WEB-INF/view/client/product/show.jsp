@@ -228,6 +228,11 @@
                                                         value="${product.price}" />
                                                     đ
                                                 </p>
+                                                <div class="d-flex justify-content-center">
+                                                    <p class="text-secondary">Đánh giá(${product.reviews.size()})</p>
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    <p class="text-dark">Đã bán(${product.sold})</p>
+                                                </div>
                                                 <form action="/add-product-to-cart/${product.id}"
                                                     method="post">
                                                     <input type="hidden" name="${_csrf.parameterName}"

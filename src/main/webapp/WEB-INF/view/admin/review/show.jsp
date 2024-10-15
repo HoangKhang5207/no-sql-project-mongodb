@@ -41,12 +41,13 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
                       <div class="row mb-3">
                           <div class="col-8">
                               <label for="pro" class="form-label">Sản phẩm</label>
-                              <select class="form-select" id="pro" name="productId">
-                                    <option selected value="">Vui lòng chọn sản phẩm</option>
+                              <input class="form-control" list="products" id="productInput" />
+                              <input type="hidden" name="productId" id="productId" />
+                              <datalist id="products">
                                   <c:forEach var="product" items="${productList}">
-                                      <option value="${product.id}">${product.name}</option>
+                                      <option label="${product.id}">${product.name}</option>
                                   </c:forEach>
-                              </select>
+                              </datalist>
                           </div>
                           <div class="col-4">
                               <label for="rating" class="form-label">Đánh giá</label>
@@ -116,7 +117,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
                         <th>ID</th>
                         <th>Người đánh giá</th>
                         <th>Số sao</th>
-                        <th>Thời gian đánh giá</th>
+                        <th>Ngày đánh giá</th>
                         <th>Hành động</th>
                       </tr>
                     </thead>
@@ -145,6 +146,11 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
                               href="/admin/review/${review.id}?page=${currentPage}&productId=${product.id}&rating=${rating}&fromDate=${fromDate}&toDate=${toDate}&sort=${sort}"
                               class="btn btn-success"
                               >Xem chi tiết</a
+                            >
+                            <a
+                              href="/admin/review/del/${review.id}?page=${currentPage}&productId=${product.id}&rating=${rating}&fromDate=${fromDate}&toDate=${toDate}&sort=${sort}"
+                              class="btn btn-danger"
+                              >Xóa</a
                             >
                           </td>
                         </tr>
@@ -211,6 +217,22 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
               sessionStorage.setItem('firstLoad', 'true');
           }
       };
+    </script>
+    <script>
+      const productInput = document.getElementById('productInput');
+
+      productInput.addEventListener('input', function() {
+          const datalist = document.getElementById('products');
+          const options = datalist.options;
+          let productId = document.getElementById('productId');
+
+          for (let i = 0; i < options.length; i++) {
+              if (options[i].value === productInput.value) {
+                  productId.value = options[i].getAttribute('label');
+                  break;
+              }
+          }
+      });
     </script>
   </body>
 </html>

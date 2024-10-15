@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service;
 
 import vn.hoangkhang.laptopshop.domain.CartDetailMongo;
 import vn.hoangkhang.laptopshop.domain.CartMongo;
+import vn.hoangkhang.laptopshop.domain.OrderDetailMongo;
 import vn.hoangkhang.laptopshop.domain.OrderMongo;
+import vn.hoangkhang.laptopshop.domain.ProductMongo;
 import vn.hoangkhang.laptopshop.domain.UserMongo;
 import vn.hoangkhang.laptopshop.domain.dto.AggregatedOrders;
 import vn.hoangkhang.laptopshop.domain.dto.RegisterDTO;
@@ -133,7 +135,22 @@ public class UserMongoService {
             order.setStatus(orderRequest.getStatus());
             user.getOrders().set(idxOrder, order);
 
-            this.userMongoRepository.save(user);
+            UserMongo savedUser = this.userMongoRepository.save(user);
+            OrderMongo orderSaved = savedUser.getOrders().get(idxOrder);
+
+            if (orderSaved.getStatus().equals("COMPLETE")) {
+                for (OrderDetailMongo orderDetail : orderSaved.getOrderDetails()) {
+                    Optional<ProductMongo> productMongo = this.productMongoRepository
+                            .findById(orderDetail.getProduct().getId());
+                    ProductMongo product = productMongo.isPresent() ? productMongo.get() : null;
+
+                    if (product == null)
+                        return;
+
+                    product.setSold(product.getSold() + 1);
+                    this.productMongoRepository.save(product);
+                }
+            }
         }
     }
 }
