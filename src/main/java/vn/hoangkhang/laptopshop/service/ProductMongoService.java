@@ -12,12 +12,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.aggregation.Aggregation;
-import org.springframework.data.mongodb.core.aggregation.AggregationResults;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import jakarta.servlet.http.HttpSession;
@@ -40,14 +35,12 @@ public class ProductMongoService {
     private final ProductMongoRepository productMongoRepository;
     private final UserMongoRepository userMongoRepository;
     private final UserMongoService userMongoService;
-    private final MongoTemplate mongoTemplate;
 
     public ProductMongoService(ProductMongoRepository productMongoRepository, UserMongoRepository userMongoRepository,
-            UserMongoService userMongoService, MongoTemplate mongoTemplate) {
+            UserMongoService userMongoService) {
         this.productMongoRepository = productMongoRepository;
         this.userMongoRepository = userMongoRepository;
         this.userMongoService = userMongoService;
-        this.mongoTemplate = mongoTemplate;
     }
 
     public Page<ProductMongo> getAllProducts(Pageable pageable) {
