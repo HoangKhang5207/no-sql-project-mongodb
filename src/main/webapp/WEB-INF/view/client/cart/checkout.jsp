@@ -131,15 +131,18 @@
                                 <div class="row">
                                     <div class="col-12 form-group mb-3">
                                         <label>Tên người nhận</label>
-                                        <input class="form-control" name="receiverName" required />
+                                        <input class="form-control" name="receiverName" required 
+                                               value="${user.fullName != null ? user.fullName : ''}" />
                                     </div>
                                     <div class="col-12 form-group mb-3">
                                         <label>Địa chỉ người nhận</label>
-                                        <input class="form-control" name="receiverAddress" required />
+                                        <input class="form-control" name="receiverAddress" required 
+                                                value="${user.address != null ? user.address : ''}"/>
                                     </div>
                                     <div class="col-12 form-group mb-3">
                                         <label>Số điện thoại</label>
-                                        <input class="form-control" name="receiverPhone" required />
+                                        <input class="form-control" name="receiverPhone" required 
+                                                value="${user.phone != null ? user.phone : ''}"/>
                                     </div>
                                     <div class="mt-4">
                                         <i class="fas fa-arrow-left"></i>

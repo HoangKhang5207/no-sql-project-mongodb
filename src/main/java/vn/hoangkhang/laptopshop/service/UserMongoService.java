@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import jakarta.servlet.http.HttpSession;
 import vn.hoangkhang.laptopshop.domain.CartDetailMongo;
 import vn.hoangkhang.laptopshop.domain.CartMongo;
 import vn.hoangkhang.laptopshop.domain.OrderDetailMongo;
@@ -152,5 +153,19 @@ public class UserMongoService {
                 }
             }
         }
+    }
+
+    public UserMongo handleUpdateUserProfile(UserMongo requestUser) {
+        UserMongo user = this.getUserById(requestUser.getId());
+
+        if (user == null)
+            return null;
+
+        user.setFullName(requestUser.getFullName());
+        user.setAddress(requestUser.getAddress());
+        user.setPhone(requestUser.getPhone());
+        user.setAvatar(requestUser.getAvatar());
+
+        return this.userMongoRepository.save(user);
     }
 }

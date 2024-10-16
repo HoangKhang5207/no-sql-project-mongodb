@@ -292,10 +292,12 @@ public class ProductMongoService {
         this.userMongoRepository.save(user);
     }
 
-    public void handlePlaceOrder(UserMongo userRequest, HttpSession session, String receiverName,
+    public OrderMongo handlePlaceOrder(UserMongo userRequest, HttpSession session, String receiverName,
             String receiverAddress, String receiverPhone) {
         String email = (String) session.getAttribute("email");
         UserMongo user = this.userMongoService.getUserByEmail(email);
+
+        OrderMongo orderResult = null;
 
         if (user.getOrders() == null)
             user.setOrders(new ArrayList<OrderMongo>());
@@ -337,6 +339,7 @@ public class ProductMongoService {
                 }
 
                 user.getOrders().add(order);
+                orderResult = order;
 
                 // step 2: delete cart_detail and cart
                 user.setCart(null);
@@ -347,6 +350,8 @@ public class ProductMongoService {
 
             this.userMongoRepository.save(user);
         }
+
+        return orderResult;
     }
 
     public void handleAddProductReview(ReviewMongo reviewRequest, String productId, HttpSession session) {

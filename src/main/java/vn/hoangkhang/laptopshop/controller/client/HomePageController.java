@@ -9,7 +9,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -20,6 +23,7 @@ import vn.hoangkhang.laptopshop.domain.RoleMongo;
 import vn.hoangkhang.laptopshop.domain.UserMongo;
 import vn.hoangkhang.laptopshop.domain.dto.RegisterDTO;
 import vn.hoangkhang.laptopshop.service.ProductMongoService;
+import vn.hoangkhang.laptopshop.service.UploadService;
 import vn.hoangkhang.laptopshop.service.UserMongoService;
 import vn.hoangkhang.laptopshop.util.RoleUtil;
 
@@ -29,12 +33,14 @@ public class HomePageController {
     private final ProductMongoService productMongoService;
     private final UserMongoService userMongoService;
     private final PasswordEncoder passwordEncoder;
+    private final UploadService uploadService;
 
     public HomePageController(UserMongoService userMongoService, ProductMongoService productMongoService,
-            PasswordEncoder passwordEncoder) {
+            PasswordEncoder passwordEncoder, UploadService uploadService) {
         this.userMongoService = userMongoService;
         this.productMongoService = productMongoService;
         this.passwordEncoder = passwordEncoder;
+        this.uploadService = uploadService;
     }
 
     @GetMapping("/")
@@ -104,5 +110,42 @@ public class HomePageController {
         model.addAttribute("orders", orders);
 
         return "client/cart/order-history";
+    }
+
+    @GetMapping("/user-profile")
+    public String getProfilePage(Model model, HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        String email = (String) session.getAttribute("email");
+
+        UserMongo user = this.userMongoService.getUserByEmail(email);
+        model.addAttribute("user", user);
+        return "client/profile/show";
+    }
+
+    @GetMapping("/profile/update/{id}")
+    public String getUpdateUserProfilePage(Model model, @PathVariable("id") String userId) {
+
+        UserMongo updateUser = this.userMongoService.getUserById(userId);
+
+        model.addAttribute("updateUser", updateUser);
+        return "client/profile/update";
+    }
+
+    @PostMapping("/profile/update")
+    public String handleUpdateUserProfile(@Valid @ModelAttribute("updateUser") UserMongo updateUser,
+            BindingResult bindingResult, @RequestParam("avatarFile") MultipartFile file) {
+
+        if (bindingResult.hasErrors()) {
+            return "client/profile/update";
+        }
+
+        if (!file.isEmpty()) {
+            String avatarImage = this.uploadService.handleUploadFile(file, "avatar");
+            updateUser.setAvatar(avatarImage);
+        }
+
+        this.userMongoService.handleUpdateUserProfile(updateUser);
+
+        return "redirect:/user-profile";
     }
 }

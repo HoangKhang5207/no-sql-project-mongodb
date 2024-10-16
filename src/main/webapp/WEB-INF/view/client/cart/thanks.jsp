@@ -55,7 +55,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
     <div class="container-fluid fruite py-5 text-center">
       <div class="container py-5 mt-5">
         <h1 class="alert alert-success">
-          Đặt hàng thành công! Cảm ơn bạn đã mua hàng của chúng tôi!
+          Đặt hàng thành công! Vui lòng kiểm tra email để xem chi tiết! Cảm ơn bạn đã mua hàng của chúng tôi!
         </h1>
       </div>
     </div>

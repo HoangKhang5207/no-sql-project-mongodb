@@ -29,6 +29,9 @@ public class UserMongo {
 
     private String address;
     private String avatar;
+
+    @NotNull
+    @Size(min = 10, message = "Số điện thoại phải có tối thiểu 10 chữ số")
     private String phone;
     private RoleMongo role;
     private CartMongo cart;

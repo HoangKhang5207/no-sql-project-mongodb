@@ -14,15 +14,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import vn.hoangkhang.laptopshop.domain.dto.ProductCriteriaDTO;
+import vn.hoangkhang.laptopshop.service.EmailService;
 import vn.hoangkhang.laptopshop.service.ProductMongoService;
 import vn.hoangkhang.laptopshop.service.UploadService;
 import vn.hoangkhang.laptopshop.service.UserMongoService;
 import vn.hoangkhang.laptopshop.domain.CartDetailMongo;
 import vn.hoangkhang.laptopshop.domain.CartMongo;
+import vn.hoangkhang.laptopshop.domain.OrderMongo;
 import vn.hoangkhang.laptopshop.domain.ProductMongo;
 import vn.hoangkhang.laptopshop.domain.ReviewMongo;
 import vn.hoangkhang.laptopshop.domain.UserMongo;
@@ -33,12 +36,14 @@ public class ItemController {
     private final ProductMongoService productMongoService;
     private final UserMongoService userMongoService;
     private final UploadService uploadService;
+    private final EmailService emailService;
 
     public ItemController(ProductMongoService productMongoService,
-            UserMongoService userMongoService, UploadService uploadService) {
+            UserMongoService userMongoService, UploadService uploadService, EmailService emailService) {
         this.productMongoService = productMongoService;
         this.userMongoService = userMongoService;
         this.uploadService = uploadService;
+        this.emailService = emailService;
     }
 
     @GetMapping("/product/{productId}")
@@ -149,6 +154,8 @@ public class ItemController {
         String id = (String) session.getAttribute("id");
         currentUser.setId(id);
 
+        UserMongo user = this.userMongoService.getUserById(id);
+
         CartMongo cart = this.userMongoService.fetchCartByUser(currentUser);
 
         List<CartDetailMongo> cartDetails = cart == null ? new ArrayList<CartDetailMongo>() : cart.getCartDetails();
@@ -158,6 +165,7 @@ public class ItemController {
             totalPrice += cd.getPrice() * cd.getQuantity();
         }
 
+        model.addAttribute("user", user);
         model.addAttribute("cartDetails", cartDetails);
         model.addAttribute("totalPrice", totalPrice);
 
@@ -177,13 +185,18 @@ public class ItemController {
             HttpServletRequest request,
             @RequestParam("receiverName") String receiverName,
             @RequestParam("receiverAddress") String receiverAddress,
-            @RequestParam("receiverPhone") String receiverPhone) {
+            @RequestParam("receiverPhone") String receiverPhone) throws MessagingException {
         UserMongo currentUser = new UserMongo();// null
         HttpSession session = request.getSession(false);
         String id = (String) session.getAttribute("id");
         currentUser.setId(id);
 
-        this.productMongoService.handlePlaceOrder(currentUser, session, receiverName, receiverAddress, receiverPhone);
+        String email = (String) session.getAttribute("email");
+
+        OrderMongo order = this.productMongoService.handlePlaceOrder(currentUser, session, receiverName,
+                receiverAddress, receiverPhone);
+
+        this.emailService.sendOrderConfirmationEmail(email, order);
 
         return "redirect:/thanks";
     }
