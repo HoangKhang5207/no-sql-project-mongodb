@@ -80,11 +80,20 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
                               class="btn btn-success"
                               >Xem chi tiết</a
                             >
-                            <a
-                              href="/admin/order/update/${order.id}"
-                              class="btn btn-warning mx-2"
-                              >Cập nhật trạng thái</a
-                            >
+                            <c:if test="${order.status.equals('COMPLETE')}">
+                              <a
+                                href="/admin/order/update/${order.id}"
+                                class="btn btn-warning disabled mx-2"
+                                >Cập nhật trạng thái</a
+                              >
+                            </c:if>
+                            <c:if test="${!order.status.equals('COMPLETE')}">
+                              <a
+                                href="/admin/order/update/${order.id}"
+                                class="btn btn-warning mx-2"
+                                >Cập nhật trạng thái</a
+                              >
+                            </c:if>
                           </td>
                         </tr>
                       </c:forEach>
